@@ -148,9 +148,25 @@ jobs:
           
           echo "Using tfvars file: $TFVARS_FILE"
           
-          terraform plan \
-            -var-file="$TFVARS_FILE" \
-            -out=tfplan-${{ matrix.platform }} || true
+          # Retry logic for state lock conflicts
+          MAX_RETRIES=3
+          RETRY=0
+          while [ $RETRY -lt $MAX_RETRIES ]; do
+            echo "Terraform plan attempt $((RETRY + 1))/$MAX_RETRIES"
+            terraform plan \
+              -var-file="$TFVARS_FILE" \
+              -out=tfplan-${{ matrix.platform }} && break
+            RETRY=$((RETRY + 1))
+            if [ $RETRY -lt $MAX_RETRIES ]; then
+              echo "Plan failed, waiting 30 seconds before retry..."
+              sleep 30
+            fi
+          done
+          
+          if [ $RETRY -eq $MAX_RETRIES ]; then
+            echo "❌ Failed to acquire state lock after $MAX_RETRIES attempts"
+            exit 1
+          fi
 
       - name: Upload Plan Artifact - ${{ matrix.platform }}
         uses: actions/upload-artifact@v4

@@ -107,6 +107,12 @@ sharedservicesSubnets = {
     subscriptionId         = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
   }
 }
+
+sharedservicesuan = {
+  name               = "ual-sharedservices-sea-001"
+  resource_group_name = "rg-sec-sharedservices-sea-001"
+  location           = "southeasteasia"
+}
 ###-----------------------------------------------------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------
