@@ -24,8 +24,7 @@ terraform {
 }
 
 provider "null" {
-//  source  = "hashicorp/null"
-  version = "~> 3.1"
+  // Version is now managed in required_providers block above
 }
   
 provider "azurerm" {
@@ -35,7 +34,7 @@ provider "azurerm" {
     }
   }
   subscription_id = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
-  skip_provider_registration = true
+  resource_provider_registrations = "core"
   storage_use_azuread = true
 }
 

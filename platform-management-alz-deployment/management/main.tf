@@ -3,7 +3,7 @@ data "azurerm_client_config" "current" {}
 # Multiple Resource Group
 module "resource_group" {
   for_each            = var.resourceGroups
-  source              = "..\\..\\terraform-modules-hub\\terraform-modules\\resourcegroup\\v1.0"
+  source              = "..\\..\\terraform-modules\\resourcegroup\\v1.0"
   location            = each.value.location
   resource_group_name = each.value.name
   tags                = each.value.tags
@@ -65,7 +65,7 @@ module "mgmt_route_table_module" {
 
 # mgmt user assigned identity
 module "mgmt_user_assigned_identity" {
-  source              = "..\\..\\terraform-modules-hub\\terraform-modules\\userassignedidentity\\v1.0"
+  source              = "..\\..\\terraform-modules\\userassignedidentity\\v1.0"
   for_each            = var.userAssignedIdentityName
   name                = each.value.uai_name
   location            = each.value.location
@@ -75,12 +75,12 @@ module "mgmt_user_assigned_identity" {
 
 # # mgmt Storage Sccount
 module "mgmt_storage_account" {
-  source                        = "..\\..\\terraform-modules-hub\\terraform-modules\\storageaccount\\v1.0"
+  source                        = "..\\..\\terraform-modules\\storageaccount\\v1.0"
   account_tier                  = "Standard"
   account_replication_type      = "LRS"
-  resource_group_name           = var.commonResourceGroupName
+  resource_group_name           = each.value.resource_group_name
   location                      = var.mainLocation
-  name                          = var.nsgFlowStorageAccountName
+  name                          = each.value.name
   user_assigned_identity_id     = module.mgmt_user_assigned_identity["uai1"].id
   identity_type                 = "UserAssigned"
   identity_ids                  = [module.mgmt_user_assigned_identity["uai1"].id]
