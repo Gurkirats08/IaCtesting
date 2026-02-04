@@ -135,7 +135,7 @@ jobs:
             -out=tfplan-${{ matrix.platform }} || true
 
       - name: Upload Plan Artifact - ${{ matrix.platform }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tfplan-${{ matrix.platform }}
           path: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}/tfplan-${{ matrix.platform }}
@@ -197,7 +197,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Download Plan Artifact - ${{ matrix.platform }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: tfplan-${{ matrix.platform }}
           path: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
@@ -248,7 +248,7 @@ jobs:
           terraform output -json > /tmp/${{ matrix.platform }}-output.json 2>/dev/null || echo "{}" > /tmp/${{ matrix.platform }}-output.json
 
       - name: Upload Deployment Output - ${{ matrix.platform }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: deployment-output-${{ matrix.platform }}
