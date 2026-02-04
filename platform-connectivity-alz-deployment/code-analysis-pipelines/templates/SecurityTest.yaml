@@ -1,0 +1,58 @@
+  jobs:
+  - deployment: SecurityCodeAnalysisScan
+    displayName: Run Security Code Analysis Scan 
+    environment: $(environment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+
+          - task: ms-securitydevops.microsoft-security-devops-azdevops.build-task-microsoft-security-devops.MicrosoftSecurityDevOps@1
+            displayName: 'Run Microsoft Defender for DevOps'
+            inputs:
+              categories: all
+              languages: all
+
+          - task: AzurePowerShell@5
+            name: LoadingSonarVariables
+            displayName: 'LoadingSonarVariables'
+            condition: eq(variables.sonarqube, '$true')
+            inputs:
+              azurePowerShellVersion: LatestVersion
+              azureSubscription: $(environmentEndpoint)
+              ScriptType: InlineScript
+              Inline: |
+                  # Load variables from the JSON file
+                  $variablesFile = "$(Build.SourcesDirectory)/pipelines/variables/landing-zone-$(environment)-variables.json"
+                  $variables = Get-Content -Raw -Path $variablesFile | ConvertFrom-Json
+                  
+                  $cliProjectKey = $variables.parameters.cliProjectKey.value
+                  $cliProjectName = $variables.parameters.cliProjectName.value
+
+                  Write-Host "Setting output variables"
+                  Write-Output "##vso[task.setvariable variable=cliProjectKey]$cliProjectKey"
+                  Write-Output "##vso[task.setvariable variable=cliProjectName]$cliProjectName"
+
+          - task: SonarQubePrepare@5
+            displayName: Prepare SonarQube Analysis
+            enabled: true
+            condition: and(succeeded(), eq(variables.sonarqube, '$true'))
+            inputs:
+              SonarQube: $(SonarQubeConnection)
+              scannerMode: 'CLI'
+              configMode: 'manual'
+              cliProjectKey: $(cliProjectKey)
+              cliProjectName: $(cliProjectName)
+              cliSources: '.'
+              extraProperties: |
+                # Additional properties that will be passed to the scanner, 
+                # Put one key=value per line, example:
+                # sonar.exclusions=**/*.bin
+
+          - task: SonarQubeAnalyze@5
+            displayName: Run Code Analysis
+            condition: eq(variables.sonarqube, '$true')
+            enabled: true
+            inputs:
+              jdkversion: 'JAVA_HOME_11_X64'     

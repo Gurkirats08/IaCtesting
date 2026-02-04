@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"naming","Source":"registry.terraform.io/Azure/naming/azurerm","Version":"0.4.1","Dir":".terraform/modules/naming"},{"Key":"resource_group_name","Source":"../../resource-group","Dir":"../../resource-group"},{"Key":"test","Source":"./..","Dir":".."}]}

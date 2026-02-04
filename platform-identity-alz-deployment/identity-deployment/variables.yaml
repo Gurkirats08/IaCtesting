@@ -1,0 +1,8 @@
+variables:
+  serviceConnection: external_tenant_Identity_Service_connection
+
+  #### Terraform Backend Setup ####
+  terraformStorageRG: rg-devops-sao-idnt-test31
+  terraformStorageAccount: stsaoidntdevopstest3131
+  terraformStorageContainer: identity-state
+  terraformStoragelocation: uaenorth

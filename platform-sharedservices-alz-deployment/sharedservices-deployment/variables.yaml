@@ -1,0 +1,17 @@
+# variables:
+#   serviceConnection: ALZ-Automation-SharedService-Service-Connection
+
+# variables:
+#   serviceConnection: ALZ-MultiSub-test
+
+# variables:
+#   serviceConnection: ALZ-MultiSub-test-secret
+variables:
+  serviceConnection: IaC-Testing
+ 
+  #### Terraform Backend Setup ####
+  terraformStorageRG: philips-testing
+  terraformStorageAccount: philiactestingsea01
+  terraformStorageContainer: iacstate
+  terraformStoragelocation: southeastasia
+  sharedaccesskey: false
