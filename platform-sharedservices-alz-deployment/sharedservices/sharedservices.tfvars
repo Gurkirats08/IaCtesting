@@ -110,8 +110,6 @@ sharedservicesSubnets = {
 
 sharedservicesuan = {
   name               = "ual-sharedservices-sea-001"
-  resource_group_name = "rg-sec-sharedservices-sea-001"
-  location           = "southeastasia"
 }
 ###-----------------------------------------------------------------------------------------------------------------------------------------
 
