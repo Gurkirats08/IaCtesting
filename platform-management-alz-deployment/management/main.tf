@@ -73,20 +73,24 @@ module "mgmt_user_assigned_identity" {
   depends_on          = [module.resource_group, module.mgmt_route_table_module]
 }
 
-# # mgmt Storage Sccount
+# # mgmt Storage Account
 module "mgmt_storage_account" {
-  source                        = "..\\..\\terraform-modules\\storageaccount\\v1.0"
-  account_tier                  = "Standard"
-  account_replication_type      = "LRS"
-  resource_group_name           = each.value.resource_group_name
-  location                      = var.mainLocation
-  name                          = each.value.name
-  user_assigned_identity_id     = module.mgmt_user_assigned_identity["uai1"].id
-  identity_type                 = "UserAssigned"
-  identity_ids                  = [module.mgmt_user_assigned_identity["uai1"].id]
-  public_network_access_enabled = false
-  shared_access_key_enabled     = false
-  depends_on                    = [module.mgmt_user_assigned_identity, module.resource_group]
+  for_each                        = var.mgmtStorageAccounts
+  source                          = "..\\..\\terraform-modules\\storageaccount\\v1.0"
+  account_tier                    = each.value.account_tier
+  account_replication_type        = each.value.account_replication_type
+  resource_group_name             = each.value.resource_group_name
+  location                        = each.value.location
+  name                            = each.value.name
+  user_assigned_identity_id       = module.mgmt_user_assigned_identity["uai1"].id
+  identity_type                   = "UserAssigned"
+  identity_ids                    = [module.mgmt_user_assigned_identity["uai1"].id]
+  public_network_access_enabled   = false
+  allow_nested_items_to_be_public = false
+  shared_access_key_enabled       = each.value.shared_access_key_enabled
+  queue_encryption_key_type       = false
+  table_encryption_key_type       = false
+  depends_on                      = [module.resource_group, module.mgmt_user_assigned_identity]
 }
 
 # referring the auto created network watcher
