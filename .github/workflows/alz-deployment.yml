@@ -37,6 +37,8 @@ on:
 
 env:
   TERRAFORM_VERSION: "1.6.0"
+  TF_INPUT: false
+  TF_IN_AUTOMATION: true
 
 jobs:
   validate:
@@ -127,6 +129,7 @@ jobs:
 
       - name: Terraform Plan - ${{ matrix.platform }}
         working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        timeout-minutes: 30
         env:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
@@ -245,6 +248,7 @@ jobs:
             -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
 
       - name: Terraform Apply - ${{ matrix.platform }}
+        timeout-minutes: 60
         working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
         env:
           ARM_USE_OIDC: true
