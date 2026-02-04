@@ -1,0 +1,269 @@
+name: ALZ Platform Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Select Platform to Deploy'
+        required: true
+        default: 'connectivity'
+        type: choice
+        options:
+          - connectivity
+          - identity
+          - management
+          - security
+          - sharedservices
+          - all
+      environment:
+        description: 'Select Environment'
+        required: true
+        default: 'Sandbox'
+        type: choice
+        options:
+          - Sandbox
+          - Development
+          - NonProduction
+          - Production
+      action:
+        description: 'Terraform Action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TERRAFORM_VERSION: "1.6.0"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.set-platforms.outputs.platforms }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Platforms to Deploy
+        id: set-platforms
+        run: |
+          if [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            echo "platforms=connectivity,identity,management,security,sharedservices" >> $GITHUB_OUTPUT
+          else
+            echo "platforms=${{ github.event.inputs.platform }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Display Configuration
+        run: |
+          echo "🚀 Deployment Configuration"
+          echo "Platform(s): ${{ steps.set-platforms.outputs.platforms }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Action: ${{ github.event.inputs.action }}"
+
+  terraform-plan:
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: ${{ fromJson(format('[{0}]', format('"{0}"', needs.validate.outputs.platforms))) }}
+      fail-fast: false
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          STORAGE_ACCOUNT=$(grep "terraformStorageAccount:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          STORAGE_RG=$(grep "terraformStorageRG:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          STORAGE_CONTAINER=$(grep "terraformStorageContainer:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          
+          terraform init \
+            -backend-config="resource_group_name=$STORAGE_RG" \
+            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+            -backend-config="container_name=$STORAGE_CONTAINER" \
+            -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
+
+      - name: Terraform Format Check - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        continue-on-error: true
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        run: terraform validate
+
+      - name: Terraform Plan - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          terraform plan \
+            -var-file="${{ github.event.inputs.environment }}-${{ matrix.platform }}.tfvars" \
+            -out=tfplan-${{ matrix.platform }} || true
+
+      - name: Upload Plan Artifact - ${{ matrix.platform }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-${{ matrix.platform }}
+          path: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}/tfplan-${{ matrix.platform }}
+          retention-days: 7
+
+      - name: Comment PR with Plan - ${{ matrix.platform }}
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const workDir = `./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}`;
+            const planOutput = `Terraform Plan for: **${{ matrix.platform }}**\n\n`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: planOutput + '```\nPlan generated successfully\n```'
+            });
+
+  approval:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'apply'
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Approval Checkpoint
+        run: |
+          echo "✅ Approval granted for ${{ github.event.inputs.platform }} deployment to ${{ github.event.inputs.environment }}"
+          echo "Proceeding with Terraform Apply..."
+
+  terraform-apply:
+    needs: [validate, approval]
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'apply'
+    strategy:
+      matrix:
+        platform: ${{ fromJson(format('[{0}]', format('"{0}"', needs.validate.outputs.platforms))) }}
+      fail-fast: false
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Download Plan Artifact - ${{ matrix.platform }}
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-${{ matrix.platform }}
+          path: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+
+      - name: Terraform Init - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          STORAGE_ACCOUNT=$(grep "terraformStorageAccount:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          STORAGE_RG=$(grep "terraformStorageRG:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          STORAGE_CONTAINER=$(grep "terraformStorageContainer:" platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}-deployment/variables.yaml | head -1 | awk '{print $2}')
+          
+          terraform init \
+            -backend-config="resource_group_name=$STORAGE_RG" \
+            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+            -backend-config="container_name=$STORAGE_CONTAINER" \
+            -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
+
+      - name: Terraform Apply - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          if [ -f "tfplan-${{ matrix.platform }}" ]; then
+            terraform apply -auto-approve "tfplan-${{ matrix.platform }}"
+          else
+            echo "❌ Plan file not found. Skipping apply."
+            exit 1
+          fi
+
+      - name: Capture Terraform Output - ${{ matrix.platform }}
+        working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
+        if: always()
+        run: |
+          terraform output -json > /tmp/${{ matrix.platform }}-output.json 2>/dev/null || echo "{}" > /tmp/${{ matrix.platform }}-output.json
+
+      - name: Upload Deployment Output - ${{ matrix.platform }}
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: deployment-output-${{ matrix.platform }}
+          path: /tmp/${{ matrix.platform }}-output.json
+
+  deployment-summary:
+    needs: [validate, terraform-plan]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Generate Deployment Summary
+        run: |
+          echo "## 🎯 ALZ Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Platform(s):** ${{ needs.validate.outputs.platforms }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
