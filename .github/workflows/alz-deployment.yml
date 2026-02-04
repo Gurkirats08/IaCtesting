@@ -136,8 +136,17 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
+          # Check for environment-specific tfvars file, fallback to platform tfvars
+          if [ -f "${{ github.event.inputs.environment }}-${{ matrix.platform }}.tfvars" ]; then
+            TFVARS_FILE="${{ github.event.inputs.environment }}-${{ matrix.platform }}.tfvars"
+          else
+            TFVARS_FILE="${{ matrix.platform }}.tfvars"
+          fi
+          
+          echo "Using tfvars file: $TFVARS_FILE"
+          
           terraform plan \
-            -var-file="${{ github.event.inputs.environment }}-${{ matrix.platform }}.tfvars" \
+            -var-file="$TFVARS_FILE" \
             -out=tfplan-${{ matrix.platform }} || true
 
       - name: Upload Plan Artifact - ${{ matrix.platform }}

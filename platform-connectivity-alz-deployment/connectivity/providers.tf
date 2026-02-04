@@ -16,7 +16,7 @@ provider "azurerm" {
     }
   }
   subscription_id = "f8ad85d0-f173-426c-804e-972cc19ea770"
-  skip_provider_registration = true
+  resource_provider_registrations = "core"
   storage_use_azuread = true
 }
 
@@ -27,7 +27,7 @@ provider "azurerm" {
     }
   }
   subscription_id = "f8ad85d0-f173-426c-804e-972cc19ea770"
-  skip_provider_registration = true
+  resource_provider_registrations = "core"
   storage_use_azuread = true
   alias = "connSubNew"
 }
