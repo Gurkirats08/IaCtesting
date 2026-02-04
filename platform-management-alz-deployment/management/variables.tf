@@ -54,7 +54,6 @@ variable "mgmtVirtualNetworks" {
     VirtualNetworkName = string
     address_space      = string
     sku_name           = string
-    DDosProtectionPlan = string
   }))
   default = {}
 }
@@ -120,19 +119,12 @@ variable "mgmtLogAnalyticsWorkspaces" {
 variable "mgmtStorageAccounts" {
   description = "Storage accounts"
   type = map(object({
-    name                          = string
-    resource_group_name           = string
-    location                      = string
-    account_tier                  = string
-    account_replication_type      = string
-    key_vault_key_id              = optional(string)
-    user_assigned_identity_id     = optional(string)
-    identity_type                 = optional(string)
-    identity_ids                  = optional(list(string))
-    public_network_access_enabled = optional(bool)
-    shared_access_key_enabled     = optional(bool)
-    queue_encryption_key_type     = optional(string)
-    table_encryption_key_type     = optional(string)
+    name                      = string
+    account_tier              = string
+    account_replication_type  = string
+    resource_group_name       = string
+    location                  = string
+    shared_access_key_enabled = optional(bool)
   }))
   default = {}
 }

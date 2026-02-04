@@ -29,9 +29,8 @@ module "mgmt_vnet_module" {
   resource_group_name          = each.value.resourceGroupName
   location                     = var.mainLocation
   address_space                = [each.value.address_space]
-  ddos_protection_plan_ddos_id = module.mgmt_ddosplan_module.ddos_protection_plan_ids[each.value.DDosProtectionPlan]
   tags                         = { "environment" : var.environment }
-  depends_on                   = [module.resource_group, module.mgmt_ddosplan_module]
+  depends_on                   = [module.resource_group]
 }
 
 # mgmt subnets

@@ -212,7 +212,7 @@ mgmtSubnets = {
     name              = "ksp-pcw-mgmt-platform-ci-vnet-01-snet-01"
     addressPrefix     = "192.168.1.0/26"
     vnet_name         = "vnet-mgmt-sea-001"
-    subscriptionId    = "60115b64-f08a-4207-bb4b-f8eb757aecd1"
+    subscriptionId    = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
     nsgName           = "nsg-mgmt-sea-001"
     rtName            = "rt-mgmt-sea-001"
 
@@ -223,7 +223,7 @@ mgmtSubnets = {
     name              = "ksp-pcw-mgmt-platform-ci-vnet-01-snet-02"
     addressPrefix     = "192.168.1.64/26"
     vnet_name         = "vnet-mgmt-sea-001"
-    subscriptionId    = "60115b64-f08a-4207-bb4b-f8eb757aecd1"
+    subscriptionId    = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
     nsgName           = "nsg-mgmt-sea-001"
     rtName            = "rt-mgmt-sea-001"
 
@@ -234,10 +234,21 @@ mgmtSubnets = {
     name              = "ksp-pcw-mgmt-platform-ci-vnet-01-snet-02"
     addressPrefix     = "192.168.1.64/26"
     vnet_name         = "vnet-mgmt-sea-001"
-    subscriptionId    = "60115b64-f08a-4207-bb4b-f8eb757aecd1"
+    subscriptionId    = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
     nsgName           = "nsg-mgmt-sea-001"
     rtName            = "rt-mgmt-sea-001"
 
+  }
+}
+
+mgmtStorageAccounts = {
+  sa1 = {
+    name                      = "stmanagementseatest01"
+    resource_group_name       = "rg-common-mgmt-sea-001"
+    location                  = "southeastasia"
+    account_tier              = "Standard"
+    account_replication_type  = "LRS"
+    shared_access_key_enabled = false
   }
 }
 
