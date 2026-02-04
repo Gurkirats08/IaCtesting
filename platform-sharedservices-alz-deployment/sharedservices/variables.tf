@@ -86,10 +86,8 @@ variable "sharedservicesVirtualNetworks" {
     subscriptionId     = string
     VirtualNetworkName = string
     address_space      = string
-    bastionIPName      = string
     sku_name           = string
-    bastionName        = string
-    DDosProtectionPlan = string
+
   }))
   default = {}
 }

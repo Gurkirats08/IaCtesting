@@ -1,6 +1,6 @@
 # global variables
 environment  = "dev"
-mainLocation = "southeasteasia"
+mainLocation = "southeastasia"
 tags = {
   environment = "sharedservices"
 }
@@ -10,35 +10,35 @@ subscriptionId = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
 resourceGroups = {
   netRG = {
     name     = "rg-net-sharedservices-sea-001"
-    location = "southeasteasia"
+    location = "southeastasia"
     tags = {
       team = "Sec-Team"
     }
   },
   laRG = {
     name     = "rg-gov-sharedservices-sea-001"
-    location = "southeasteasia"
+    location = "southeastasia"
     tags = {
       team = "Sec-Team"
     }
   }
   paasRG = {
     name     = "rg-paas-sharedservices-sea-001"
-    location = "southeasteasia"
+    location = "southeastasia"
     tags = {
       team = "Sec-Team"
     }
   }
   backupRG = {
     name     = "rg-backup-sharedservices-sea-002"
-    location = "southeasteasia"
+    location = "southeastasia"
     tags = {
       team = "Sec-Team"
     }
   }
   secRG = {
     name     = "rg-sec-sharedservices-sea-001"
-    location = "southeasteasia"
+    location = "southeastasia"
     tags = {
       team = "Sec-Team"
     }
@@ -51,7 +51,7 @@ storageAccounts = {
   sa1 = {
     name                      = "stssharedseatest01"
     resource_group_name       = "rg-paas-sharedservices-sea-001"
-    location                  = "southeasteasia"
+    location                  = "southeastasia"
     account_tier              = "Standard"
     account_replication_type  = "LRS"
     shared_access_key_enabled = false
@@ -60,7 +60,7 @@ storageAccounts = {
 
 # Network Watcher [created automatically]
 network_watcher_rg   = "NetworkWatcherRG"
-network_watcher_name = "NetworkWatcher_southeasteasia"
+network_watcher_name = "NetworkWatcher_southeastasia"
 
 
 # virtual network
@@ -71,7 +71,7 @@ sharedservicesVirtualNetworks = {
     VirtualNetworkName = "vnet-sharedservices-sea-001"
     address_space      = "10.64.0.0/23"
     sku_name           = "Standard"
-    location           = "southeasteasia"
+    location           = "southeastasia"
   }
 }
 
@@ -111,7 +111,7 @@ sharedservicesSubnets = {
 sharedservicesuan = {
   name               = "ual-sharedservices-sea-001"
   resource_group_name = "rg-sec-sharedservices-sea-001"
-  location           = "southeasteasia"
+  location           = "southeastasia"
 }
 ###-----------------------------------------------------------------------------------------------------------------------------------------
 
