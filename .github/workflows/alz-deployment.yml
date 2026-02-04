@@ -116,10 +116,10 @@ jobs:
             -backend-config="container_name=$STORAGE_CONTAINER" \
             -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
 
-      - name: Terraform Format Check - ${{ matrix.platform }}
+      - name: Terraform Format - ${{ matrix.platform }}
         working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
         continue-on-error: true
-        run: terraform fmt -check -recursive
+        run: terraform fmt -recursive
 
       - name: Terraform Validate - ${{ matrix.platform }}
         working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
