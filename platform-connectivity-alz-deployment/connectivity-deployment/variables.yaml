@@ -1,9 +1,0 @@
-variables:
-  serviceConnection: external_tenant_Connectivity_Service_connection
-  #vmImage: ''
-
-  #### Terraform Backend Setup ####
-  terraformStorageRG: rg-devops-sao-conn-eus-033
-  terraformStorageAccount: stsaoconndevopseus033
-  terraformStorageContainer: connectivity-state
-  terraformStorageLocation: uaenorth

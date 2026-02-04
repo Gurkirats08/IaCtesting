@@ -1,9 +1,0 @@
-variables:
-  serviceConnection: extrenal_tenant_security_service_connection
-
-  #### Terraform Backend Setup ####
-  terraformStorageRG: rg-devops-sec-sao-aen-001
-  terraformStorageAccount: stsaosecdevopsaen020
-  terraformStorageContainer: security-state
-  terraformStoragelocation: uaenorth
-  #ARM_USE_AZUREAD: true # Set to true if you are using AzureAD for authentication
