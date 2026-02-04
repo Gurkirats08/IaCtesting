@@ -73,6 +73,14 @@ sharedservicesVirtualNetworks = {
     sku_name           = "Standard"
     location           = "southeastasia"
   }
+  vnet2 = {
+    resourceGroupName  = "rg-net-sharedservices-sea-001"
+    subscriptionId     = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
+    VirtualNetworkName = "vnet-sharedservices-sea-002"
+    address_space      = "10.65.0.0/23"
+    sku_name           = "Standard"
+    location           = "southeastasia"
+  }
 }
 
 sharedservicesSubnets = {
@@ -103,6 +111,17 @@ sharedservicesSubnets = {
     addressPrefix          = "10.64.1.0/25"
     vnet_name              = "vnet-sharedservices-sea-001"
     networkSecurityGroupId = "nsg-sharedservices-sea-001"
+    routeTableId           = null
+    subscriptionId         = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
+  }
+
+   snet2 = {
+    resourceGroupName      = "rg-net-sharedservices-sea-001"
+    vnet_key               = "vnet2"
+    name                   = "snet2-testing"
+    addressPrefix          = "10.65.1.0/25"
+    vnet_name              = "vnet-sharedservices-sea-002"
+    networkSecurityGroupId = "nsg-sharedservices-sea-002"
     routeTableId           = null
     subscriptionId         = "3e3a2118-a39a-4ff7-9df7-104c3e1e611a"
   }
