@@ -93,11 +93,6 @@ module "mgmt_storage_account" {
   depends_on                      = [module.resource_group, module.mgmt_user_assigned_identity]
 }
 
-# referring the auto created network watcher
-data "azurerm_network_watcher" "mgmt_network_watcher" {
-  name                = var.network_watcher_name
-  resource_group_name = var.network_watcher_rg
-}
 
 
 

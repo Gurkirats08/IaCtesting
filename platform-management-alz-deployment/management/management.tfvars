@@ -252,10 +252,6 @@ mgmtStorageAccounts = {
   }
 }
 
-
-# Network Watcher [created automatically]
-network_watcher_name              = "mgmtnetworkwatchersea001"
-network_watcher_rg                = "NetworkWatcherRG"
 private_endpoint_network_policies = "Disabled"
 
 

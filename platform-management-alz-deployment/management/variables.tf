@@ -18,17 +18,6 @@ variable "mainLocation" {
   description = "Storage Account Name for nsg flow logs"
 }
 
-variable "network_watcher_name" {
-  description = "Network Watcher Name"
-  type        = string
-}
-
-variable "network_watcher_rg" {
-  description = "Network Watcher Resource Group"
-  type        = string
-
-}
-
 # Mgmt Resource Group
 variable "resourceGroups" {
   description = "Resource groups"
