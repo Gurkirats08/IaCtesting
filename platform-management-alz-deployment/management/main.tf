@@ -88,8 +88,8 @@ module "mgmt_storage_account" {
   public_network_access_enabled   = false
   allow_nested_items_to_be_public = false
   shared_access_key_enabled       = each.value.shared_access_key_enabled
-  queue_encryption_key_type       = false
-  table_encryption_key_type       = false
+  queue_encryption_key_type       = "Account"
+  table_encryption_key_type       = "Account"
   depends_on                      = [module.resource_group, module.mgmt_user_assigned_identity]
 }
 
