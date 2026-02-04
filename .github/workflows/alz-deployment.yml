@@ -21,10 +21,7 @@ on:
         default: 'Sandbox'
         type: choice
         options:
-          - Sandbox
-          - Development
           - NonProduction
-          - Production
       action:
         description: 'Terraform Action'
         required: true
