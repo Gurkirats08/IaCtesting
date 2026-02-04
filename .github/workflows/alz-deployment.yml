@@ -102,21 +102,8 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
-          # Extract backend configuration from variables.yaml
-          STORAGE_ACCOUNT=$(grep "terraformStorageAccount:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          STORAGE_RG=$(grep "terraformStorageRG:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          STORAGE_CONTAINER=$(grep "terraformStorageContainer:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          
-          # Debug output
-          echo "Storage Account: $STORAGE_ACCOUNT"
-          echo "Storage RG: $STORAGE_RG"
-          echo "Storage Container: $STORAGE_CONTAINER"
-          
-          terraform init \
-            -backend-config="resource_group_name=$STORAGE_RG" \
-            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
-            -backend-config="container_name=$STORAGE_CONTAINER" \
-            -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
+          # Initialize Terraform with backend configuration file
+          terraform init -backend-config="backend.tfvars"
 
       - name: Terraform Format - ${{ matrix.platform }}
         working-directory: ./platform-${{ matrix.platform }}-alz-deployment/${{ matrix.platform }}
@@ -247,21 +234,8 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
-          # Extract backend configuration from variables.yaml
-          STORAGE_ACCOUNT=$(grep "terraformStorageAccount:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          STORAGE_RG=$(grep "terraformStorageRG:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          STORAGE_CONTAINER=$(grep "terraformStorageContainer:" ../${{ matrix.platform }}-deployment/variables.yaml | awk '{print $NF}' | tr -d ':')
-          
-          # Debug output
-          echo "Storage Account: $STORAGE_ACCOUNT"
-          echo "Storage RG: $STORAGE_RG"
-          echo "Storage Container: $STORAGE_CONTAINER"
-          
-          terraform init \
-            -backend-config="resource_group_name=$STORAGE_RG" \
-            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
-            -backend-config="container_name=$STORAGE_CONTAINER" \
-            -backend-config="key=terraform-${{ matrix.platform }}-${{ github.event.inputs.environment }}.tfstate"
+          # Initialize Terraform with backend configuration file
+          terraform init -backend-config="backend.tfvars"
 
       - name: Terraform Apply - ${{ matrix.platform }}
         timeout-minutes: 60
