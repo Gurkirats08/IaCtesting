@@ -1,0 +1,254 @@
+name: ALZ Management Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Environment'
+        required: true
+        default: 'NonProduction'
+        type: choice
+        options:
+          - NonProduction
+      action:
+        description: 'Terraform Action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TERRAFORM_VERSION: "1.6.0"
+  TF_INPUT: false
+  TF_IN_AUTOMATION: true
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init
+        working-directory: ./platform-management-alz-deployment/management
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: terraform init -backend-config="backend.tfvars"
+
+      - name: Terraform Format
+        working-directory: ./platform-management-alz-deployment/management
+        continue-on-error: true
+        run: terraform fmt -recursive
+
+      - name: Terraform Validate
+        working-directory: ./platform-management-alz-deployment/management
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: ./platform-management-alz-deployment/management
+        timeout-minutes: 30
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          if [ -f "${{ github.event.inputs.environment }}-management.tfvars" ]; then
+            TFVARS_FILE="${{ github.event.inputs.environment }}-management.tfvars"
+          else
+            TFVARS_FILE="management.tfvars"
+          fi
+
+          echo "Using tfvars file: $TFVARS_FILE"
+
+          MAX_RETRIES=3
+          RETRY=0
+          while [ $RETRY -lt $MAX_RETRIES ]; do
+            echo "Terraform plan attempt $((RETRY + 1))/$MAX_RETRIES"
+            terraform plan \
+              -var-file="$TFVARS_FILE" \
+              -out=tfplan-management && break
+            RETRY=$((RETRY + 1))
+            if [ $RETRY -lt $MAX_RETRIES ]; then
+              echo "Plan failed, waiting 30 seconds before retry..."
+              sleep 30
+            fi
+          done
+
+          if [ $RETRY -eq $MAX_RETRIES ]; then
+            echo "❌ Failed to acquire state lock after $MAX_RETRIES attempts"
+            exit 1
+          fi
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-management
+          path: ./platform-management-alz-deployment/management/tfplan-management
+          retention-days: 7
+
+  approval:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy'
+    environment:
+      name: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Approval Checkpoint
+        run: |
+          echo "✅ Approval granted for management deployment to ${{ github.event.inputs.environment }}"
+
+  terraform-apply:
+    needs: approval
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'apply'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-management
+          path: ./platform-management-alz-deployment/management
+
+      - name: Terraform Init
+        working-directory: ./platform-management-alz-deployment/management
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: terraform init -backend-config="backend.tfvars"
+
+      - name: Terraform Apply
+        timeout-minutes: 60
+        working-directory: ./platform-management-alz-deployment/management
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          if [ -f "tfplan-management" ]; then
+            terraform apply -auto-approve "tfplan-management"
+          else
+            echo "❌ Plan file not found. Skipping apply."
+            exit 1
+          fi
+
+  terraform-destroy:
+    needs: approval
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'destroy'
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init
+        working-directory: ./platform-management-alz-deployment/management
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: terraform init -backend-config="backend.tfvars"
+
+      - name: Terraform Destroy
+        timeout-minutes: 60
+        working-directory: ./platform-management-alz-deployment/management
+        env:
+          ARM_USE_OIDC: true
+          ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+          ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_environment: ${{ github.event.inputs.environment }}
+        run: |
+          if [ -f "${{ github.event.inputs.environment }}-management.tfvars" ]; then
+            TFVARS_FILE="${{ github.event.inputs.environment }}-management.tfvars"
+          else
+            TFVARS_FILE="management.tfvars"
+          fi
+
+          terraform destroy -auto-approve -var-file="$TFVARS_FILE"
+
+  deployment-summary:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Generate Deployment Summary
+        run: |
+          echo "## 🎯 ALZ Management Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
