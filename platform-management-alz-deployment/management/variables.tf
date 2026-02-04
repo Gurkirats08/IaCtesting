@@ -18,11 +18,6 @@ variable "mainLocation" {
   description = "Storage Account Name for nsg flow logs"
 }
 
-variable "mgmtSubscriptionId" {
-  description = "Management Subscription ID"
-  type        = string
-}
-
 variable "network_watcher_name" {
   description = "Network Watcher Name"
   type        = string
@@ -147,8 +142,3 @@ variable "private_endpoint_network_policies" {
   type = string
 }
 
-variable "uai_name" {
-  type        = string
-  description = "User Assigned Identity Name"
-
-}
