@@ -163,7 +163,7 @@ module "linux_vm_module" {
   administrator_user_name = var.adminUser
   linux_vms               = var.sharedservicesLinuxVms
   resource_group_name     = "rg-idnt-test-31"
-  disk_encryption_set_id  = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-adds-idnt-prd-sao-aen-001/providers/Microsoft.Compute/diskEncryptionSets/sec-team"
+  disk_encryption_set_id  = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-adds-idnt-prd-phi-sea-001/providers/Microsoft.Compute/diskEncryptionSets/sec-team"
   identity_type           = "UserAssigned"
   identity_ids            = module.identity_user_assigned_identity.id
   depends_on              = [ module.terraform-azurerm-resource-group] //,module.sharedservices_disk_encryption_set]

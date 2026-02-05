@@ -538,7 +538,7 @@ module "sec_keyvault_module" {
   network_acls = {
     bypass                     = "AzureServices"
     default_action             = "Deny"
-    virtual_network_subnet_ids = [module.sec_subnet_module["vnet-sao-sec-aen-001_gatewaysubnet"].id, module.sec_subnet_module["vnet-sao-sec-aen-001_AzureFirewallSubnet"].id, module.sec_subnet_module["vnet-sao-sec-aen-001_ksp-pcw-sec-platform-ci-vnet-01-snet-01"].id, module.sec_subnet_module["vnet-sao-sec-aen-001_ksp-pcw-sec-platform-ci-vnet-01-snet-02"].id, module.sec_subnet_module["vnet-sao-sec-aen-001_AzureBastionSubnet"].id, "/subscriptions/6c55b3c2-3d8e-40e8-85cf-a95d842095ac/resourceGroups/Contos-ADO-Runners/providers/Microsoft.Network/virtualNetworks/Contos-ADO-Runners-vnet/subnets/default"]
+    virtual_network_subnet_ids = [module.sec_subnet_module["vnet-phi-sec-sea-001_gatewaysubnet"].id, module.sec_subnet_module["vnet-phi-sec-sea-001_AzureFirewallSubnet"].id, module.sec_subnet_module["vnet-phi-sec-sea-001_ksp-pcw-sec-platform-ci-vnet-01-snet-01"].id, module.sec_subnet_module["vnet-phi-sec-sea-001_ksp-pcw-sec-platform-ci-vnet-01-snet-02"].id, module.sec_subnet_module["vnet-phi-sec-sea-001_AzureBastionSubnet"].id, "/subscriptions/6c55b3c2-3d8e-40e8-85cf-a95d842095ac/resourceGroups/Contos-ADO-Runners/providers/Microsoft.Network/virtualNetworks/Contos-ADO-Runners-vnet/subnets/default"]
   }
   depends_on = [module.resource_group, module.sec_log_analytics_workspace_module]
 }
@@ -655,7 +655,7 @@ module "azurerm_private_dns_zone_virtual_network_link" {
   name                 = each.value.name
   resource_group_name  = each.value.resource_group_name
   private_dns_zone     = each.value.private_dns_zone_name
-  virtual_network_id   = module.sec_vnet_module["vnet-sao-sec-aen-001"].id
+  virtual_network_id   = module.sec_vnet_module["vnet-phi-sec-sea-001"].id
   registration_enabled = each.value.registration_enabled
   depends_on           = [module.sec_vnet_module]
 }

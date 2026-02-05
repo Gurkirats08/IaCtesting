@@ -452,14 +452,14 @@ module "diagnostic_setting" {
 
 # # module "rbac1" {
 # #   source               = "..\\..\\terraform-modules-hub\\terraform-modules\\rbac\\v1.0"
-# #   scope                = module.conn_keyvault_module["kv-sao-conn-eus-001"].key_vault_id
+# #   scope                = module.conn_keyvault_module["kv-phi-conn-eus-001"].key_vault_id
 # #   principal_id         = module.conn_user_assigned_identity.principal_id
 # #   role_definition_name = "Key Vault Secrets User"
 # #   depends_on           = [module.conn_keyvault_module, module.conn_user_assigned_identity]
 # # }
 # # module "rbac2" {
 # #   source               = "..\\..\\terraform-modules-hub\\terraform-modules\\rbac\\v1.0"
-# #   scope                = module.conn_keyvault_module["kv-sao-conn-eus-001"].key_vault_id
+# #   scope                = module.conn_keyvault_module["kv-phi-conn-eus-001"].key_vault_id
 # #   principal_id         = module.conn_user_assigned_identity.principal_id
 # #   role_definition_name = "Key Vault Crypto User"
 # #   depends_on           = [module.conn_keyvault_module, module.conn_user_assigned_identity]
@@ -471,7 +471,7 @@ module "diagnostic_setting" {
 # #   for_each           = var.connKeyVaultKeys
 # #   source             = "..\\..\\terraform-modules-hub\\terraform-modules\\keyvaultkey\\v1.0"
 # #   key_vault_key_name = each.value.key_name
-# #   key_vault_id       = module.conn_keyvault_module["kv-sao-conn-eus-001"].key_vault_id
+# #   key_vault_id       = module.conn_keyvault_module["kv-phi-conn-eus-001"].key_vault_id
 # #   key_type           = each.value.key_type
 # #   key_opts           = each.value.key_opts
 # #   key_size           = 4096

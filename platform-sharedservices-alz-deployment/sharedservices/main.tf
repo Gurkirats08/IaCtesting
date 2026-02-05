@@ -97,7 +97,7 @@ module "sharedservices_subnet_module" {
 #   private_endpoint_name          = each.value.private_endpoint_name
 #   resource_group_name            = var.resourceGroups["netRG"].name
 #   location                       = each.value.location
-#   subnet_id                      = module.sharedservices_subnet_module["vnet-sao-sharedservices-aen-001_ksp-pcw-sharedservices-platform-ci-vnet-01-snet-01"].id
+#   subnet_id                      = module.sharedservices_subnet_module["vnet-phi-sharedservices-sea-001_ksp-pcw-sharedservices-platform-ci-vnet-01-snet-01"].id
 #   private_dns_zone_id            = each.value.private_dns_zone_id
 #   private_connection_resource_id = each.value.private_connection_resource_id
 #   subresource_names              = each.value.subresource_names
@@ -122,7 +122,7 @@ module "sharedservices_subnet_module" {
 #   name                 = each.value.name
 #   resource_group_name  = each.value.resource_group_name
 #   private_dns_zone     = each.value.private_dns_zone_name
-#   virtual_network_id   = module.sharedservices_vnet_module["vnet-sao-sharedservices-aen-001"].id
+#   virtual_network_id   = module.sharedservices_vnet_module["vnet-phi-sharedservices-sea-001"].id
 #   registration_enabled = each.value.registration_enabled
 #   depends_on           = [module.sharedservices_vnet_module, data.azurerm_private_dns_zone.dnszone]
 # }

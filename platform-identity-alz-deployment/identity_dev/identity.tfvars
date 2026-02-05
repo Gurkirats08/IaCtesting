@@ -4,8 +4,8 @@ environment             = "dev"
 location                = "uaenorth"
 identity_sub_id         = "a03bd7fd-5bf3-4ea3-95be-7babd65eb73e"
 security_subsId         = "dac03557-6089-4127-ae8a-e343e5635de2"
-terraformStorageRG      = "rg-devops-sao-idnt-test"
-terraformStorageAccount = "stsaoidntdevopstest"
+terraformStorageRG      = "rg-devops-phi-idnt-test"
+terraformStorageAccount = "stphiidntdevopstest"
 hsmKeyName              = "idnt-hsm-key-test1"
 tags                    = { env = "dev", team = "sec-Team" }
 
@@ -13,7 +13,7 @@ tags                    = { env = "dev", team = "sec-Team" }
 resourceGroups = {
 
   # netRG = {
-  #   name     = "rg-net-idnt-prd-sao-aen-001"
+  #   name     = "rg-net-idnt-prd-phi-sea-001"
   #   location = "uaenorth"
   #   tags = {
   #     team = "Sec-Team"
@@ -27,7 +27,7 @@ resourceGroups = {
   #   }
   # }
   # commonRG = {
-  #   name     = "rg-common-idnt-prd-sao-aen-001"
+  #   name     = "rg-common-idnt-prd-phi-sea-001"
   #   location = "uaenorth"
   #   tags = {
   #     team = "Sec-Team"
@@ -61,17 +61,17 @@ sharedservicesLinuxVms = {
     ipConfigName              = "ipconfig1"
     # privateIPAllocationMethod = "Static"
     # jumpBoxPrivateIP          = "10.64.1.96"
-    # vNetName                  = "vnet-sao-sharedservices-aen-001"
+    # vNetName                  = "vnet-phi-sharedservices-sea-001"
     # subnetName                = "ksp-pcw-sharedservices-platform-ci-vnet-01-snet-01"
-    # subnetresourceGroupName   = "rg-net-sao-sharedservices-aen-001"
+    # subnetresourceGroupName   = "rg-net-phi-sharedservices-sea-001"
     # availabilityZone          = 3
     # encryptionAtHost          = false
     # vmNicSuffix               = "-linuxnic-01"
 
     subnetName                = "snet-idnt-platform-dev-01"
-    subnetresourceGroupName   = "rg-net-idnt-prd-sao-aen-001"
+    subnetresourceGroupName   = "rg-net-idnt-prd-phi-sea-001"
     vNetName                  = "vnet-idnt-platform-dev-01"
-    resourceGroupName         = "rg-adds-idnt-prd-sao-aen-001"
+    resourceGroupName         = "rg-adds-idnt-prd-phi-sea-001"
     privateIPAllocationMethod = "Dynamic"
     vmNicSuffix               = "-nic-01"
     ipConfigName              = "ipconfig2"
@@ -86,13 +86,13 @@ sharedservicesLinuxVms = {
 # vm_backup_policies = {
 #   policy1 = {
 #     backup_policy_name      = "vm-backup-policy-01"
-#     recovery_vault_name     = "rsv-sao-shared-aen-001"
-#     rsv_resource_group_name = "rg-backup-sao-sharedservices-aen-001"
+#     recovery_vault_name     = "rsv-phi-shared-aen-001"
+#     rsv_resource_group_name = "rg-backup-phi-sharedservices-sea-001"
 #     backup_frequency        = "Daily"
 #     backup_time             = "23:00"
 #     retention_daily_count   = 10
 #     vm_name                 = "vmjumpshareds01"
-#     vm_resource_group_name  = "rg-devops-sharedservices-sao-aen-001"
+#     vm_resource_group_name  = "rg-devops-sharedservices-phi-sea-001"
 #   }
 # }
 
@@ -116,7 +116,7 @@ identityVirtualMachines = {
     vmDiskStorageType          = "Standard_LRS"
     subnetName                 = "snet-idnt-platform-dev-01"
     vNetName                   = "vnet-idnt-platform-dev-01"
-    subnetresourceGroupName    = "rg-net-idnt-prd-sao-aen-001"
+    subnetresourceGroupName    = "rg-net-idnt-prd-phi-sea-001"
     resourceGroupName          = "rg-idnt-test-01"
     privateIPAllocationMethod  = "Dynamic"
     vmNicSuffix                = "-nic-01"
@@ -144,7 +144,7 @@ identityVirtualMachines = {
 #     diskSizeGB                = 127
 #     vmDiskStorageType         = "StandardSSD_ZRS"
 #     subnetName                = "snet-idnt-platform-dev-01"
-#     subnetresourceGroupName   = "rg-net-idnt-prd-sao-aen-001"
+#     subnetresourceGroupName   = "rg-net-idnt-prd-phi-sea-001"
 #     vNetName                  = "vnet-idnt-platform-dev-01"
 #     resourceGroupName         = "rg-idnt-test-01"
 #     privateIPAllocationMethod = "Dynamic"
@@ -170,7 +170,7 @@ identityVirtualMachines = {
 #     diskSizeGB                = 127
 #     vmDiskStorageType         = "StandardSSD_ZRS"
 #     subnetName                = "snet-idnt-platform-dev-01"
-#     subnetresourceGroupName   = "rg-net-idnt-prd-sao-aen-001"
+#     subnetresourceGroupName   = "rg-net-idnt-prd-phi-sea-001"
 #     vNetName                  = "vnet-idnt-platform-dev-01"
 #     resourceGroupName         = "rg-idnt-test-01"
 #     privateIPAllocationMethod = "Dynamic"
@@ -204,7 +204,7 @@ identityVirtualMachines = {
 #     privateIPAllocationMethod = "Dynamic"
 #     //jumpBoxPrivateIP          = "10.64.1.96"
 #     subnetName                = "snet-idnt-platform-dev-01"
-#     subnetresourceGroupName   = "rg-net-idnt-prd-sao-aen-001"
+#     subnetresourceGroupName   = "rg-net-idnt-prd-phi-sea-001"
 #     vNetName                  = "vnet-idnt-platform-dev-01"
 #     availabilityZone          = 3
 #     encryptionAtHost          = false
@@ -223,12 +223,12 @@ identityVirtualMachines = {
 #     createOption              = "FromImage"
 #     diskSizeGB                = 127
 #     vmDiskStorageType         = "Standard_LRS"
-#     //nsgName                   = "nsg-sao-sharedservices-aen-001"
+#     //nsgName                   = "nsg-phi-sharedservices-sea-001"
 #     ipConfigName              = "ipconfig1"
 #     privateIPAllocationMethod = "Dynamic"
 #     //jumpBoxPrivateIP          = "10.64.1.97"
 #     subnetName                = "snet-idnt-platform-dev-01"
-#     subnetresourceGroupName   = "rg-net-idnt-prd-sao-aen-001"
+#     subnetresourceGroupName   = "rg-net-idnt-prd-phi-sea-001"
 #     vNetName                  = "vnet-idnt-platform-dev-01"
 #     availabilityZone          = 3
 #     encryptionAtHost          = false
@@ -241,7 +241,7 @@ resource_group_name = "rg-idnt-test-23"
 subscriptionId      = "a03bd7fd-5bf3-4ea3-95be-7babd65eb73e"
 
 hsm_name                 = "Sec-hsm01"
-hsm_resource_group       = "rg-sec-hsm-sao-aen-001"
+hsm_resource_group       = "rg-sec-hsm-phi-sea-001"
 hsm_key_name             = "hsm-key-copy01"
 disk_encryption_set_name = "sec-team"
 
@@ -261,7 +261,7 @@ appDataDisks = {
 
 # appRecoveryServiceVault = {
 #   rsv1 = {
-#     recovery_services_vault_name = "rsv-sao-test-aen-001"
+#     recovery_services_vault_name = "rsv-phi-test-aen-001"
 #     resource_group_name          = "rg-idnt-test-01"
 #     location                     = "uaenorth"
 #     sku                          = "Standard"
@@ -318,30 +318,30 @@ mainLocation = "uaenorth"
 vm_backup_policies = {
   policy1 = {
     backup_policy_name      = "vm-backup-policy-31"
-    recovery_vault_name     = "rsv-sao-idnt-test-31"
+    recovery_vault_name     = "rsv-phi-idnt-test-31"
     rsv_resource_group_name = "rg-idnt-test-31"
     backup_frequency        = "Daily"
     backup_time             = "23:00"
     retention_daily_count   = 10
     vm_name                 = "idntvm-DC01"
-    vm_resource_group_name  = "rg-adds-idnt-prd-sao-aen-001"
+    vm_resource_group_name  = "rg-adds-idnt-prd-phi-sea-001"
   }
   policy2 = {
     backup_policy_name      = "vm-backup-policy-32"
-    recovery_vault_name     = "rsv-sao-idnt-test-31"
+    recovery_vault_name     = "rsv-phi-idnt-test-31"
     rsv_resource_group_name = "rg-idnt-test-31"
     backup_frequency        = "Daily"
     backup_time             = "23:00"
     retention_daily_count   = 10
     vm_name                 = "idntvm-DC02"
-    vm_resource_group_name  = "rg-adds-idnt-prd-sao-aen-001"
+    vm_resource_group_name  = "rg-adds-idnt-prd-phi-sea-001"
   }
 }
 
 
 appRecoveryServiceVault = {
   rsv1 = {
-    recovery_services_vault_name = "rsv-sao-idnt-test-31"
+    recovery_services_vault_name = "rsv-phi-idnt-test-31"
     resource_group_name          = "rg-idnt-test-31"
     location                     = "uaenorth"
     sku                          = "Standard"
@@ -361,7 +361,7 @@ vnet_address_space = "172.29.2.0/23"
 
 identityRouteTables = {
   rt1 = {
-    resourceGroupName          = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName          = "rg-net-idnt-prd-phi-sea-001"
     routeTableName             = "rt-idnt-platform-dev-01"
     disableBgpRoutePropagation = true
     routes = [
@@ -380,7 +380,7 @@ identityRouteTables = {
     ]
   }
   rt2 = {
-    resourceGroupName          = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName          = "rg-net-idnt-prd-phi-sea-001"
     routeTableName             = "rt-idnt-platform-dev-02"
     disableBgpRoutePropagation = true
     routes = [{
@@ -394,14 +394,14 @@ identityRouteTables = {
 # virtual network
 idntVirtualNetworks = {
   vnet1 = {
-    resourceGroupName  = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName  = "rg-net-idnt-prd-phi-sea-001"
     subscriptionId     = "a03bd7fd-5bf3-4ea3-95be-7babd65eb73e"
     VirtualNetworkName = "vnet-idnt-platform-dev-01"
     address_space      = "172.29.2.0/23"
     bastionIPName      = ""
     sku_name           = "Standard"
     bastionName        = ""
-    # DDosProtectionPlan = "ddos-sao-conn-eus-017"
+    # DDosProtectionPlan = "ddos-phi-conn-eus-017"
   }
 }
 
@@ -411,7 +411,7 @@ idntVirtualNetworks = {
 identityNetworkSecurityGroups = {
   nsg1 = {
     name              = "nsg-idnt-platform-dev-01"
-    resourceGroupName = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName = "rg-net-idnt-prd-phi-sea-001"
     securityRules = [
       {
         name = "Allow-HTTP"
@@ -474,7 +474,7 @@ identityNetworkSecurityGroups = {
 
 idntSubnets = {
   snet1 = {
-    resourceGroupName = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName = "rg-net-idnt-prd-phi-sea-001"
     vnet_key          = "vnet-idnt-platform-dev-01"
     name              = "snet-idnt-platform-dev-01"
     addressPrefix     = "172.29.2.0/26"
@@ -485,7 +485,7 @@ idntSubnets = {
     #  nsgName           = null
   },
   snet2 = {
-    resourceGroupName = "rg-net-idnt-prd-sao-aen-001"
+    resourceGroupName = "rg-net-idnt-prd-phi-sea-001"
     vnet_key          = "vnet-idnt-platform-dev-01"
     name              = "snet-idnt-platform-dev-02"
     addressPrefix     = "172.29.2.64/26"
@@ -500,9 +500,9 @@ identityNetworkPeering = {
   # peering with connectivity alz
   vnetpeering1 = {
     sourceVnetName      = "vnet-idnt-platform-dev-01"
-    sourceVnetRg        = "rg-net-idnt-prd-sao-aen-001"
-    destinationVnetName = "vnet-net-sao-conn-eus-001"
-    destinationVnetRg   = "rg-net-conn-prd-sao-aen-001"
+    sourceVnetRg        = "rg-net-idnt-prd-phi-sea-001"
+    destinationVnetName = "vnet-net-phi-conn-eus-001"
+    destinationVnetRg   = "rg-net-conn-prd-phi-sea-001"
   }
 }
 
@@ -512,7 +512,7 @@ idntPrivateEndpoint = {
     private_endpoint_name = "pe-idnt-platform-001-storage"
     subnet_name           = "snet-idnt-platform-dev-01"
     vnet_name             = "vnet-idnt-platform-dev-01"
-    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-common-idnt-prd-sao-aen-001/providers/Microsoft.Storage/storageAccounts/stgnsgflowidntdev02"
+    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-common-idnt-prd-phi-sea-001/providers/Microsoft.Storage/storageAccounts/stgnsgflowidntdev02"
     subresource_names     = ["blob"]
   },
   # PE for backend storage to store TF state files
@@ -520,7 +520,7 @@ idntPrivateEndpoint = {
     private_endpoint_name = "pe-idnt-platform-002-storage"
     subnet_name           = "snet-idnt-platform-dev-01"
     vnet_name             = "vnet-idnt-platform-dev-01"
-    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-devops-sao-idnt-eus-003/providers/Microsoft.Storage/storageAccounts/stsaoidntdevopseus003"
+    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-devops-phi-idnt-eus-003/providers/Microsoft.Storage/storageAccounts/stsaoidntdevopseus003"
     subresource_names     = ["blob"]
   }
 }
@@ -529,14 +529,14 @@ idntPrivateEndpoint = {
 # resource_group = "rg-idnt-platform-dev-01"
 
 # hsm_name                  = "Sec-hsm01"
-# hsm_resource_group        = "rg-sec-hsm-sao-aen-001"
+# hsm_resource_group        = "rg-sec-hsm-phi-sea-001"
 # hsm_key_name              = "idnt-hsm-key-01"
 nsgFlowStorageAccountName = "stgnsgflowidntdev02"
-# terraformStorageRG          = "rg-devops-sao-idnt-eus-003"
+# terraformStorageRG          = "rg-devops-phi-idnt-eus-003"
 # terraformStorageAccount     = "stsaoidntdevopseus003"
 # disk_encryption_set_name    = "sec-team"
 private_dns_zone_name       = "privatelink.vaultcore.azure.net"
-dnszone_resource_group_name = "rg-dns-conn-prd-sao-aen-001"
+dnszone_resource_group_name = "rg-dns-conn-prd-phi-sea-001"
 
 # Network Watcher [created automatically]
 network_watcher_rg   = "NetworkWatcherRG"
@@ -564,7 +564,7 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 #     vmDiskStorageType          = "Standard_LRS"
 #     subnetName                 = "snet-idnt-platform-dev-01"
 #     vNetName                   = "vnet-idnt-platform-dev-01"
-#     subnetresourceGroupName    = "rg-net-idnt-prd-sao-aen-001"
+#     subnetresourceGroupName    = "rg-net-idnt-prd-phi-sea-001"
 #     resourceGroupName          = "rg-idnt-test-01"
 #     privateIPAllocationMethod  = "Dynamic"
 #     vmNicSuffix                = "-nic-01"
@@ -605,7 +605,7 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 #     location                         = "uaenorth"
 #     backup_instance_name             = "disk-backup-instance-01"
 #     backupvault_resource_group_name  = "rg-backup-idnt-test-001"
-#     managed_disk_resource_group_name = "rg-adds-idnt-prd-sao-aen-001"
+#     managed_disk_resource_group_name = "rg-adds-idnt-prd-phi-sea-001"
 #     snapshot_resource_group_name     = "rg-backup-idnt-test-001"
 #     vmName                           = "idntvm-DC01"
 #     osType                           = "Windows"
@@ -618,25 +618,25 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 #   #     name                = "Lock-netRG-idnt-aen-001"
 #   #     lock_level          = "CanNotDelete"
 #   #     notes               = "Lock to prevent accidental deletion"
-#   #     resource_group_name = "rg-net-idnt-prd-sao-aen-001"
+#   #     resource_group_name = "rg-net-idnt-prd-phi-sea-001"
 #   #   }
 #   #   "lock2" = {
 #   #     name                = "Lock-addsRG-idnt-aen-001"
 #   #     lock_level          = "CanNotDelete"
 #   #     notes               = "Lock to prevent accidental deletion"
-#   #     resource_group_name = "rg-adds-idnt-prd-sao-aen-001"
+#   #     resource_group_name = "rg-adds-idnt-prd-phi-sea-001"
 #   #   },
 #   "lock3" = {
 #     name                = "Lock-commonRG-idnt-aen-001"
 #     lock_level          = "CanNotDelete"
 #     notes               = "Lock to prevent accidental deletion"
-#     resource_group_name = "rg-common-idnt-prd-sao-aen-001"
+#     resource_group_name = "rg-common-idnt-prd-phi-sea-001"
 #   }
 #   # "lock4" = {
 #   #   name                = "Lock-backupRG-idnt-aen-001"
 #   #   lock_level          = "CanNotDelete"
 #   #   notes               = "Lock to prevent accidental deletion"
-#   #   resource_group_name = "rg-backup-idnt-prd-sao-aen-001"
+#   #   resource_group_name = "rg-backup-idnt-prd-phi-sea-001"
 #   # }
 # }
 
@@ -645,7 +645,7 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 # storageAccounts = {
 #   sa1 = {
 #     name                      = "stssharedservicesaen100"
-#     resource_group_name       = "rg-paas-sao-sharedservices-aen-001"
+#     resource_group_name       = "rg-paas-phi-sharedservices-sea-001"
 #     location                  = "uaenorth"
 #     account_tier              = "Standard"
 #     account_replication_type  = "LRS"
@@ -657,7 +657,7 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 #  LAW
 idntWorkspace = {
   law1 = {
-    name                     = "law-sao-idnt-ops-aen-001"
+    name                     = "law-phi-idnt-ops-sea-001"
     resourceGroupName        = "rg-idnt-test-01"
     sku                      = "PerGB2018"
     retentionPeriod          = 30
@@ -670,7 +670,7 @@ idntWorkspace = {
 # Mgmt nsg flow log
 idntFlowLogs = {
   flowlog1 = {
-    nsg_flow_log_name = "flow-log-sao-idnt-aen-001"
+    nsg_flow_log_name = "flow-log-phi-idnt-sea-001"
     nsgName           = "nsg-idnt-platform-dev-01"
     location          = "uaenorth"
     subscriptionId    = "a03bd7fd-5bf3-4ea3-95be-7babd65eb73e"
@@ -681,19 +681,19 @@ idntFlowLogs = {
 identityDNSLink = {
   link1 = {
     name                  = "identity-dns-link-01"
-    resource_group_name   = "rg-dns-conn-prd-sao-aen-001"
+    resource_group_name   = "rg-dns-conn-prd-phi-sea-001"
     private_dns_zone_name = "privatelink.blob.core.windows.net"
     registration_enabled  = false
   },
   link2 = {
     name                  = "identity-dns-link-02"
-    resource_group_name   = "rg-dns-conn-prd-sao-aen-001"
+    resource_group_name   = "rg-dns-conn-prd-phi-sea-001"
     private_dns_zone_name = "privatelink.vaultcore.azure.net"
     registration_enabled  = false
   },
   link3 = {
     name                  = "identity-dns-link-01"
-    resource_group_name   = "rg-dns-conn-prd-sao-aen-001"
+    resource_group_name   = "rg-dns-conn-prd-phi-sea-001"
     private_dns_zone_name = "privatelink.managedhsm.azure.net"
     registration_enabled  = false
   }
@@ -702,14 +702,14 @@ identityDNSLink = {
 
 idntdatacollectionendpoint = {
   "endpoint1" = {
-    datacollectionendpoint = "endpoint--sao-idnt-aen-001"
+    datacollectionendpoint = "endpoint--phi-idnt-sea-001"
     resource_group_name    = "rg-idnt-test-01"
     location               = "uaenorth"
     kind                   = "Windows"
     #  public_network_access_enabled = false
   }
   "endpoint2" = {
-    datacollectionendpoint = "endpoint--sao-idnt-aen-002"
+    datacollectionendpoint = "endpoint--phi-idnt-sea-002"
     resource_group_name    = "rg-idnt-test-01"
     location               = "uaenorth"
     kind                   = "Linux"
@@ -719,12 +719,12 @@ idntdatacollectionendpoint = {
 
 dcr_configs = {
   dcr1 = {
-    dcr_name                 = "dcr-windows-ssrc-aen-001"
+    dcr_name                 = "dcr-windows-ssrc-sea-001"
     dcr_rg_name              = "rg-idnt-test-01"
     dcr_rg_location          = "uaenorth"
-    dce_name                 = "endpoint--sao-idnt-aen-001"
+    dce_name                 = "endpoint--phi-idnt-aen-001"
     dce_rg_name              = "rg-idnt-test-01"
-    destination_logworkspace = "law-sao-idnt-ops-aen-001"
+    destination_logworkspace = "law-phi-idnt-ops-aen-001"
     data_flow_streams        = ["Microsoft-InsightsMetrics", "Microsoft-Event"]
 
     # Windows-specific data sources
@@ -743,12 +743,12 @@ dcr_configs = {
   }
 
   dcr2 = {
-    dcr_name                 = "dcr-linux-ssrc-aen-001"
+    dcr_name                 = "dcr-linux-ssrc-sea-001"
     dcr_rg_name              = "rg-idnt-test-01"
     dcr_rg_location          = "uaenorth"
-    dce_name                 = "endpoint--sao-idnt-aen-002"
+    dce_name                 = "endpoint--phi-idnt-aen-002"
     dce_rg_name              = "rg-idnt-test-01"
-    destination_logworkspace = "law-sao-idnt-ops-aen-001"
+    destination_logworkspace = "law-phi-idnt-ops-aen-001"
     data_flow_streams        = ["Microsoft-InsightsMetrics"]
 
     # Windows-specific data sources
