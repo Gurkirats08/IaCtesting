@@ -131,3 +131,17 @@ variable "private_endpoint_network_policies" {
   type = string
 }
 
+variable "mgmtLogAnalyticsWorkspaces" {
+  description = "Log Analytics workspace for management"
+  type = object({
+    name                     = string
+    resourceGroupName        = string
+    location                 = string
+    sku                      = string
+    retentionPeriod          = optional(number)
+    internetIngestionEnabled = optional(bool)
+    internetQueryEnabled     = optional(bool)
+    dailyQuotaGb             = optional(number)
+  })
+  
+}

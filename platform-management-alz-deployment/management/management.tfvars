@@ -254,6 +254,19 @@ mgmtStorageAccounts = {
 
 private_endpoint_network_policies = "Disabled"
 
+mgmtLogAnalyticsWorkspaces = {
+  law1 = {
+    name                     = "law-mgmt-sea-001"
+    resourceGroupName        = "rg-common-mgmt-prd-sea-001"
+    location                 = "southeastasia"
+    sku                      = "PerGB2018"
+    retentionPeriod          = 30
+    internetIngestionEnabled = false
+    internetQueryEnabled     = false
+    dailyQuotaGb             = 10
+  } 
+}
+
 
 
 
