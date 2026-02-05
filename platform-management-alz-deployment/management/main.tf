@@ -93,12 +93,11 @@ module "mgmt_storage_account" {
   depends_on                      = [module.resource_group, module.mgmt_user_assigned_identity]
 }
 
-module "mgmt_log_analytics" {
-  source                     = "..\\..\\terraform-modules\\loganalytics\\v1.0"
-  workspaces                 = var.mgmtLogAnalyticsWorkspaces
-  location                   = var.mainLocation
-  tags                       = { "environment" : var.environment }
-  depends_on                 = [module.resource_group]
+module "mgmt_log_analytics_workspace_module" {
+  source     = "..\\..\\terraform-modules\\loganalytics\\v1.0"
+  workspaces = var.mgmtLogAnalyticsWorkspaces
+  location   = var.mainLocation
+  depends_on = [module.resource_group]
 }
 
 
