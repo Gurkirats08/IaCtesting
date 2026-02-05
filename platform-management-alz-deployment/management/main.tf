@@ -93,18 +93,12 @@ module "mgmt_storage_account" {
   depends_on                      = [module.resource_group, module.mgmt_user_assigned_identity]
 }
 
-module "mgmt_log_analytics_workspace" {
-  for_each                    = var.mgmtLogAnalyticsWorkspaces
-  source                      = "..\\..\\terraform-modules\\loganalyticsworkspace\\v1.0"
-  name                        = each.value.name
-  resource_group_name         = each.value.resourceGroupName
-  location                    = var.mainLocation
-  sku                         = each.value.sku
-  retention_period            = lookup(each.value, "retentionPeriod", null)
-  internet_ingestion_enabled  = lookup(each.value, "internetIngestionEnabled", null)
-  internet_query_enabled      = lookup(each.value, "internetQueryEnabled", null)
-  daily_quota_gb              = lookup(each.value, "dailyQuotaGb", null)
-  depends_on                  = [module.resource_group]
+module "mgmt_log_analytics" {
+  source                     = "..\\..\\terraform-modules\\loganalytics\\v1.0"
+  workspaces                 = var.mgmtLogAnalyticsWorkspaces
+  location                   = var.mainLocation
+  tags                       = { "environment" : var.environment }
+  depends_on                 = [module.resource_group]
 }
 
 

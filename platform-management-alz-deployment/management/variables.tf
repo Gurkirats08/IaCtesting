@@ -145,3 +145,4 @@ variable "mgmtLogAnalyticsWorkspaces" {
   })
   
 }
+
