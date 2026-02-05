@@ -86,7 +86,7 @@ sharedservicesLinuxVms = {
 # vm_backup_policies = {
 #   policy1 = {
 #     backup_policy_name      = "vm-backup-policy-01"
-#     recovery_vault_name     = "rsv-phi-shared-aen-001"
+#     recovery_vault_name     = "rsv-phi-shared-sea-001"
 #     rsv_resource_group_name = "rg-backup-phi-sharedservices-sea-001"
 #     backup_frequency        = "Daily"
 #     backup_time             = "23:00"
@@ -261,7 +261,7 @@ appDataDisks = {
 
 # appRecoveryServiceVault = {
 #   rsv1 = {
-#     recovery_services_vault_name = "rsv-phi-test-aen-001"
+#     recovery_services_vault_name = "rsv-phi-test-sea-001"
 #     resource_group_name          = "rg-idnt-test-01"
 #     location                     = "uaenorth"
 #     sku                          = "Standard"
@@ -520,7 +520,7 @@ idntPrivateEndpoint = {
     private_endpoint_name = "pe-idnt-platform-002-storage"
     subnet_name           = "snet-idnt-platform-dev-01"
     vnet_name             = "vnet-idnt-platform-dev-01"
-    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-devops-phi-idnt-eus-003/providers/Microsoft.Storage/storageAccounts/stsaoidntdevopseus003"
+    storage_account_id    = "/subscriptions/a03bd7fd-5bf3-4ea3-95be-7babd65eb73e/resourceGroups/rg-devops-phi-idnt-eus-003/providers/Microsoft.Storage/storageAccounts/stphiidntdevopseus003"
     subresource_names     = ["blob"]
   }
 }
@@ -533,7 +533,7 @@ idntPrivateEndpoint = {
 # hsm_key_name              = "idnt-hsm-key-01"
 nsgFlowStorageAccountName = "stgnsgflowidntdev02"
 # terraformStorageRG          = "rg-devops-phi-idnt-eus-003"
-# terraformStorageAccount     = "stsaoidntdevopseus003"
+# terraformStorageAccount     = "stphiidntdevopseus003"
 # disk_encryption_set_name    = "sec-team"
 private_dns_zone_name       = "privatelink.vaultcore.azure.net"
 dnszone_resource_group_name = "rg-dns-conn-prd-phi-sea-001"
@@ -615,25 +615,25 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 
 # idntResourceLocks = {
 #   #   "lock1" = {
-#   #     name                = "Lock-netRG-idnt-aen-001"
+#   #     name                = "Lock-netRG-idnt-sea-001"
 #   #     lock_level          = "CanNotDelete"
 #   #     notes               = "Lock to prevent accidental deletion"
 #   #     resource_group_name = "rg-net-idnt-prd-phi-sea-001"
 #   #   }
 #   #   "lock2" = {
-#   #     name                = "Lock-addsRG-idnt-aen-001"
+#   #     name                = "Lock-addsRG-idnt-sea-001"
 #   #     lock_level          = "CanNotDelete"
 #   #     notes               = "Lock to prevent accidental deletion"
 #   #     resource_group_name = "rg-adds-idnt-prd-phi-sea-001"
 #   #   },
 #   "lock3" = {
-#     name                = "Lock-commonRG-idnt-aen-001"
+#     name                = "Lock-commonRG-idnt-sea-001"
 #     lock_level          = "CanNotDelete"
 #     notes               = "Lock to prevent accidental deletion"
 #     resource_group_name = "rg-common-idnt-prd-phi-sea-001"
 #   }
 #   # "lock4" = {
-#   #   name                = "Lock-backupRG-idnt-aen-001"
+#   #   name                = "Lock-backupRG-idnt-sea-001"
 #   #   lock_level          = "CanNotDelete"
 #   #   notes               = "Lock to prevent accidental deletion"
 #   #   resource_group_name = "rg-backup-idnt-prd-phi-sea-001"
@@ -644,7 +644,7 @@ identity_user_assigned_identity_name = "idnt-platform-identity-UAI"
 # storage account
 # storageAccounts = {
 #   sa1 = {
-#     name                      = "stssharedservicesaen100"
+#     name                      = "stssharedservicessea100"
 #     resource_group_name       = "rg-paas-phi-sharedservices-sea-001"
 #     location                  = "uaenorth"
 #     account_tier              = "Standard"
@@ -722,9 +722,9 @@ dcr_configs = {
     dcr_name                 = "dcr-windows-ssrc-sea-001"
     dcr_rg_name              = "rg-idnt-test-01"
     dcr_rg_location          = "uaenorth"
-    dce_name                 = "endpoint--phi-idnt-aen-001"
+    dce_name                 = "endpoint--phi-idnt-sea-001"
     dce_rg_name              = "rg-idnt-test-01"
-    destination_logworkspace = "law-phi-idnt-ops-aen-001"
+    destination_logworkspace = "law-phi-idnt-ops-sea-001"
     data_flow_streams        = ["Microsoft-InsightsMetrics", "Microsoft-Event"]
 
     # Windows-specific data sources
@@ -746,9 +746,9 @@ dcr_configs = {
     dcr_name                 = "dcr-linux-ssrc-sea-001"
     dcr_rg_name              = "rg-idnt-test-01"
     dcr_rg_location          = "uaenorth"
-    dce_name                 = "endpoint--phi-idnt-aen-002"
+    dce_name                 = "endpoint--phi-idnt-sea-002"
     dce_rg_name              = "rg-idnt-test-01"
-    destination_logworkspace = "law-phi-idnt-ops-aen-001"
+    destination_logworkspace = "law-phi-idnt-ops-sea-001"
     data_flow_streams        = ["Microsoft-InsightsMetrics"]
 
     # Windows-specific data sources

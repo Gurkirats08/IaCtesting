@@ -216,7 +216,7 @@ variable "adminUser" {
 # variable "storageAccountName" {
 #   description = "Storage Account Name for nsg flow logs"
 #   type        = string
-#   default     = "saonsgflowlogs"
+#   default     = "phinsgflowlogs"
 
 # }
 
