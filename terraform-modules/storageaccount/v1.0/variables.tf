@@ -44,7 +44,7 @@ variable "account_replication_type" {
 variable "cross_tenant_replication_enabled" {
   description = "Specifies whether cross-tenant replication is enabled for the storage account."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "access_tier" {
@@ -68,8 +68,8 @@ variable "min_tls_version" {
   type        = string
   default     = "TLS1_2"
   validation {
-    condition     = can(index(["TLS1_0", "TLS1_1", "TLS1_2"], var.min_tls_version))
-    error_message = "Invalid minimum TLS version. Valid options are TLS1_0, TLS1_1, and TLS1_2."
+    condition     = can(index(["TLS1_2"], var.min_tls_version))
+    error_message = "Invalid minimum TLS version. Only TLS1_2 is allowed for security."
   }
 }
 
@@ -125,11 +125,11 @@ variable "default_to_oauth_authentication" {
   default     = false
 }
 
-// variable "is_hns_enabled" {
-//   description = "Specifies whether Hierarchical Namespace (HNS) is enabled for the storage account."
-//   type        = bool
-//   default     = false
-// }
+variable "is_hns_enabled" {
+  description = "Specifies whether Hierarchical Namespace (HNS) is enabled for the storage account."
+  type        = bool
+  default     = false
+}
 
 variable "key_vault_key_id" {
   description = "The ID of the key vault key used to encrypt the storage account."

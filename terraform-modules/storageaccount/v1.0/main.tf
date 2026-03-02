@@ -8,18 +8,18 @@ resource "azurerm_storage_account" "this" {
   cross_tenant_replication_enabled = var.cross_tenant_replication_enabled
   access_tier                      = var.access_tier
   # enable_https_traffic_only        = var.enable_https_traffic_only
-  min_tls_version                 = var.min_tls_version
-  allow_nested_items_to_be_public = var.allow_nested_items_to_be_public
-  shared_access_key_enabled       = var.shared_access_key_enabled
-  public_network_access_enabled   = var.public_network_access_enabled
-  allowed_copy_scope              = var.allowed_copy_scope
-  sftp_enabled                    = var.sftp_enabled
-
+  min_tls_version                  = var.min_tls_version
+  allow_nested_items_to_be_public  = var.allow_nested_items_to_be_public
+  shared_access_key_enabled        = var.shared_access_key_enabled
+  public_network_access_enabled    = var.public_network_access_enabled
+  allowed_copy_scope               = var.allowed_copy_scope
+  sftp_enabled                     = var.sftp_enabled
+  
 
   network_rules {
     default_action = "Deny"
-    bypass         = ["AzureServices"]
-
+    bypass = ["AzureServices"]
+    
   }
 
   dynamic "custom_domain" {
@@ -31,17 +31,22 @@ resource "azurerm_storage_account" "this" {
   }
 
   default_to_oauth_authentication = var.default_to_oauth_authentication
-  is_hns_enabled                  = false
+  is_hns_enabled                  = (var.account_tier == "Standard" || (var.account_tier == "Premium" && var.account_kind == "BlockBlobStorage")) ? true : false
 
-  nfsv3_enabled = false
+  nfsv3_enabled = (
+    (
+      (var.account_tier == "Standard" && var.account_kind == "StorageV2") ||
+      (var.account_tier == "Premium" && var.account_kind == "BlockBlobStorage")
+    ) &&
+    var.is_hns_enabled &&
+    (var.account_replication_type == "LRS" || var.account_replication_type == "RAGRS")
+  ) ? true : false
 
   dynamic "customer_managed_key" {
     for_each = var.key_vault_key_id == null ? [] : [1]
     content {
-      # key_vault_key_id          = var.key_vault_key_id
-      managed_hsm_key_id        = var.key_vault_key_id
+      key_vault_key_id          = var.key_vault_key_id
       user_assigned_identity_id = var.user_assigned_identity_id
-
     }
   }
   dynamic "identity" {
@@ -181,8 +186,8 @@ resource "azurerm_storage_account" "this" {
   # local_user_enabled                = var.local_user_enabled
   # queue_encryption_key_type         = var.account_kind == "StorageV2" ? var.queue_encryption_key_type : "Service"
   # table_encryption_key_type         = var.account_kind == "StorageV2" ? var.table_encryption_key_type : "Service"
-  queue_encryption_key_type         = var.queue_encryption_key_type
-  table_encryption_key_type         = var.table_encryption_key_type
+  queue_encryption_key_type         = var.queue_encryption_key_type 
+  table_encryption_key_type         = var.table_encryption_key_type 
   infrastructure_encryption_enabled = var.infrastructure_encryption_enabled
 
   dynamic "immutability_policy" {
@@ -227,22 +232,10 @@ resource "azurerm_storage_account" "this" {
       choice                      = var.routing_choice
     }
   }
-  lifecycle {
-    ignore_changes = [customer_managed_key]
-  }
 }
 
-/*
-resource "null_resource" "disable_blob_public_access" {
-  triggers = {
-    always_run = timestamp()
-  }
-  provisioner "local-exec" {
-    command = <<EOT
-      az account list --query "[?isDefault]"
-      az storage account update --name ${azurerm_storage_account.this.name} --resource-group ${azurerm_storage_account.this.resource_group_name} --allow-blob-public-access false
-    EOT
-  } */
-
-//   depends_on = [azurerm_storage_account.this]
-// }
+# NOTE: The null_resource with local-exec provisioner has been removed as it was an anti-pattern.
+# The allow_blob_public_access setting is already managed through the 
+# allow_nested_items_to_be_public variable in the azurerm_storage_account resource above.
+# If additional blob public access restrictions are needed, use azurerm_storage_account_network_rules
+# or manage through Azure Policy instead.

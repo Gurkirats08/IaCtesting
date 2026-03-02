@@ -62,7 +62,7 @@ variable "sku_name" {
 variable "public_network_access_enabled" {
   description = "Whether public network access is enabled for the key vault"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "tenant_id" {

@@ -94,8 +94,11 @@ function Download-Gateway([string] $url, [string] $gwPath)
     try
     {
         $ErrorActionPreference = "Stop";
-        $client = New-Object System.Net.WebClient
-        $client.DownloadFile($url, $gwPath)
+        # Enforce TLS 1.2 or higher for secure downloads
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        
+        # Use Invoke-WebRequest instead of deprecated WebClient
+        Invoke-WebRequest -Uri $url -OutFile $gwPath -UseBasicParsing
         Trace-Log "Download gateway successfully. Gateway loc: $gwPath"
     }
     catch
@@ -119,7 +122,7 @@ function Install-Gateway([string] $gwPath)
 	}
 	
 	Trace-Log "Start Gateway installation"
-	Run-Process "msiexec.exe" "/i gateway.msi INSTALLTYPE=AzureTemplate /quiet /norestart"		
+	Run-Process "msiexec.exe" "/i `"$gwPath`" INSTALLTYPE=AzureTemplate /quiet /norestart"		
 	
 	Start-Sleep -Seconds 30	
 
@@ -161,7 +164,17 @@ function Register-Gateway([string] $instanceKey)
     Trace-Log "Register Agent"
 	$filePath = Get-InstalledFilePath
 	Run-Process $filePath "-era 8060"
-	Run-Process $filePath "-k $instanceKey"
+	
+	# Use environment variable to avoid exposing key in process list
+	$env:GATEWAY_KEY = $instanceKey
+	try {
+		Run-Process $filePath "-k $env:GATEWAY_KEY"
+	}
+	finally {
+		# Clear the environment variable after use
+		Remove-Item env:GATEWAY_KEY -ErrorAction SilentlyContinue
+	}
+	
     Trace-Log "Agent registration is successful!"
 }
 
