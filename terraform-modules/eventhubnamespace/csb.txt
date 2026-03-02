@@ -1,0 +1,2 @@
+Cloud security baseline link: https://confluence.tools.telstra.com/display/NCCS/Azure+Event+Hub
+Last modified: Sep 02, 2022

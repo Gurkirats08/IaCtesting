@@ -1,15 +1,26 @@
+data "azurerm_resource_group" "this" {
+  for_each = local.resourcegroup_state_exists == false ? var.automation_accounts : {}
+  name     = each.value.resourceGroupName
+}
+
+locals {
+  resourcegroup_state_exists = false
+}
+
+
 resource "azurerm_automation_account" "this" {
-  name                          = var.name
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  sku_name                      = var.sku
-  local_authentication_enabled  = var.local_authentication_enabled
-  public_network_access_enabled = var.public_network_access_enabled
+  for_each                      = var.automation_accounts
+  name                          = each.value.name
+  location                      = var.main_location != null ? var.main_location : data.azurerm_resource_group.this[each.key].location
+  resource_group_name           = each.value.resourceGroupName
+  sku_name                      = each.value.sku
+  local_authentication_enabled  = each.value.localAuthenticationEnabled
+  public_network_access_enabled = each.value.publicNetworkAccessEnabled == "Enabled" ? true : false
 
   identity {
-    type         = var.identity_type
-    identity_ids = var.identity_ids
+    type         = each.value.identityType
+    identity_ids = lookup(each.value, "identityIds", null)
   }
 
-  tags = var.tags
+  tags = each.value.tags
 }

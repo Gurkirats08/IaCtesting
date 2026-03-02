@@ -18,13 +18,9 @@ variable "database_name" {
   description = "database name"
 }
 
-variable "partition_key_paths" {
-   type = list(string)
-   description = "partition key paths"
+variable "partition_key_path" {
+   type = string
+   description = "partition key path"
+  
 }
 
-variable "partition_key_version" {
-  type = number
-  description = "The version of the partition key definition to use."
-  default = 2
-}

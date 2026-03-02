@@ -42,27 +42,16 @@ variable "service_endpoints" {
   default     = null
 }
 
-// variable "private_endpoint_network_policies_enabled" {
-//   type        = string
-//   description = "Enable or Disable network policies for the private endpoint on the subnet. Setting this to true will Enable the policy and setting this to false will Disable the policy. Defaults to true."
-//   default     = false
-// }
-
-variable "private_endpoint_network_policies" {
+variable "private_endpoint_network_policies_enabled" {
   type        = string
   description = "Enable or Disable network policies for the private endpoint on the subnet. Setting this to true will Enable the policy and setting this to false will Disable the policy. Defaults to true."
-  default     =  "Disabled"
+  default     = false
 }
-
 variable "private_link_service_network_policies_enabled" {
   type        = string
   description = "Enable or Disable network policies for the private link service on the subnet. Setting this to true will Enable the policy and setting this to false will Disable the policy. Defaults to true."
   default     = false
 }
-
-
-
-
 
 variable "route_table_id" {
   type        = string

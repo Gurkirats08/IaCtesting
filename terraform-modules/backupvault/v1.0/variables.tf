@@ -3,10 +3,10 @@
     description = "The name of the Backup Vault"
   }
 
-  # variable "backuppolicy" {
-  #   type = string
-  #   description = "The name of the Backup Policy Name"
-  # }
+  variable "backuppolicy" {
+    type = string
+    description = "The name of the Backup Policy Name"
+  }
 
   variable "resource_group_name" {
     type = string
@@ -32,11 +32,11 @@
     type = string
     description = "The type of datastore used for the backup vault"
   }
-  #   variable "operational_default_retention_duration" {
-  #    type = string
-  #    description = "The type of datastore used for the backup vault"
-  # }
-  //    variable "retention_duration" {
-  //     type = string
-  //     description = "The retention duration for the backup vault"
-  //  }
+  //   variable "operational_default_retention_duration" {
+  //    type = string
+  //    description = "The type of datastore used for the backup vault"
+  // }
+     variable "retention_duration" {
+      type = string
+      description = "The retention duration for the backup vault"
+   }

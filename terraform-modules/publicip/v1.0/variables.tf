@@ -30,42 +30,24 @@ variable "subscription_id" {
 # -
 # - Public IP object
 # -
-# variable "public_IPs" {
-#   type = map(object({
-#     bastionIPName              = optional(string)
-#     firewallIPName             = optional(string)
-#     resourceGroupName          = string
-#     publicIPAllocationMethod   = optional(string)
-#     firewallIpAllocationMethod = optional(string)
-#     zones                      = optional(list(string))
-#     publicIPAddressVersion     = optional(string)
-#     skuName                    = optional(string)
-#     firewallSkuName            = optional(string)
-#   }))
-#   description = "The public IP with their properties."
-#   default     = {}
-# }
-
 variable "public_IPs" {
   type = map(object({
     bastionIPName              = optional(string)
     firewallIPName             = optional(string)
-    gatewayIPName              = optional(string)
+    resourceGroupName          = string
     publicIPAllocationMethod   = optional(string)
     firewallIpAllocationMethod = optional(string)
-    gatewayIpAllocationMethod  = optional(string)
-    skuName                    = optional(string)
-    firewallSkuName            = optional(string)
-    gatewayipSku               = optional(string)
     zones                      = optional(list(string))
     publicIPAddressVersion     = optional(string)
-    resourceGroupName          = optional(string)
+    skuName                    = optional(string)
+    firewallSkuName            = optional(string)
   }))
+  description = "The public IP with their properties."
+  default     = {}
 }
-
 
 variable "resource_group_name" {
   type        = string
   description = "The name of the resource group in which the public IP will be created."
-
+  
 }

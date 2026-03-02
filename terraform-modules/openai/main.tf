@@ -69,10 +69,7 @@ resource "azurerm_cognitive_account" "this" {
 
 resource "azurerm_cognitive_deployment" "this" {
   for_each = var.deployment
-  sku {
-    name     = each.value.sku_name
-    capacity = each.value.sku_capacity
-    }
+
   cognitive_account_id = azurerm_cognitive_account.this.id
   name                 = each.value.name
   rai_policy_name      = each.value.rai_policy_name
@@ -81,5 +78,8 @@ resource "azurerm_cognitive_deployment" "this" {
     format  = each.value.model_format
     name    = each.value.model_name
     version = each.value.model_version
+  }
+  scale {
+    type = each.value.scale_type
   }
 }

@@ -9,21 +9,21 @@
 # }
 
 data "azurerm_virtual_network" "source" {
-  provider            = azurerm.source
+  # provider            = azurerm.source
   name                = var.sourceVnetName
   resource_group_name = var.sourceVnetRg
 }
 
 data "azurerm_virtual_network" "destination" {
-  provider            = azurerm.dest
+  # provider            = azurerm.destination
   name                = var.destinationVnetName
   resource_group_name = var.destinationVnetRg
 }
 
 resource "azurerm_virtual_network_peering" "source_to_destination" {
-  provider                     = azurerm.source
+  # provider                     = azurerm.source
   name                         = "${var.sourceVnetName}-to-${var.destinationVnetName}"
-  remote_virtual_network_id    = var.remote_virtual_network_id != null ? var.remote_virtual_network_id : data.azurerm_virtual_network.destination.id
+  remote_virtual_network_id    = data.azurerm_virtual_network.destination.id
   resource_group_name          = var.sourceVnetRg
   virtual_network_name         = var.sourceVnetName
   allow_forwarded_traffic      = coalesce(var.allowForwardedTraffic, true)
@@ -37,9 +37,9 @@ resource "azurerm_virtual_network_peering" "source_to_destination" {
 }
 
 resource "azurerm_virtual_network_peering" "destination_to_source" {
-  provider                     = azurerm.dest
+  # provider                     = azurerm.destination
   name                         = "${var.destinationVnetName}-to-${var.sourceVnetName}"
-  remote_virtual_network_id    = var.remote_virtual_network_id != null ? var.remote_virtual_network_id : data.azurerm_virtual_network.source.id
+  remote_virtual_network_id    = data.azurerm_virtual_network.source.id
   resource_group_name          = var.destinationVnetRg
   virtual_network_name         = var.destinationVnetName
   allow_forwarded_traffic      = coalesce(var.allowForwardedTraffic, true)

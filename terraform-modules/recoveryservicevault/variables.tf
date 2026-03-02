@@ -88,29 +88,29 @@ variable "identity_ids" {
   default = null
 }
 
-# variable "encryption_key_id" {
-#   description = "The Key Vault key id used to encrypt this vault. Key managed by Vault Managed Hardware Security Module is also supported."
-#   type        = string
-#   default = null
-# }
+variable "encryption_key_id" {
+  description = "The Key Vault key id used to encrypt this vault. Key managed by Vault Managed Hardware Security Module is also supported."
+  type        = string
+  default = null
+}
 
-# variable "infrastructure_encryption_enabled" {
-#   description = "Enabling/Disabling the Double Encryption state."
-#   type        = bool
-#   default = true
-# }
+variable "infrastructure_encryption_enabled" {
+  description = "Enabling/Disabling the Double Encryption state."
+  type        = bool
+  default = true
+}
 
-# variable "user_assigned_identity_id" {
-#   description = "Specifies the user assigned identity ID to be used."
-#   type        = string
-#   default = null
-# }
+variable "user_assigned_identity_id" {
+  description = "Specifies the user assigned identity ID to be used."
+  type        = string
+  default = null
+}
 
-# variable "use_system_assigned_identity" {
-#   description = "Indicate whether system assigned identity should be used or not."
-#   type        = bool
-#   default = true
-# }
+variable "use_system_assigned_identity" {
+  description = "Indicate whether system assigned identity should be used or not."
+  type        = bool
+  default = true
+}
 
 variable "alerts_for_all_job_failures_enabled" {
   description = "Enabling/Disabling built-in Azure Monitor alerts for security scenarios and job failure scenarios."

@@ -8,6 +8,7 @@ variable "key_vault_id" {
     description = "(Required) The ID of the Key Vault where the Key should be created."
 }
 
+
 variable "key_type" {  
     type        = string  
     description = "(Required) Specifies the Key Type to use for the Key Vault Key."

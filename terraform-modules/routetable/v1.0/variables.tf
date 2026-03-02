@@ -21,8 +21,7 @@ variable "tags" {
 
 variable "route_table" {
   type = object({
- //   disable_bgp_route_propagation = bool
-    bgp_route_propagation_enabled = bool
+    disable_bgp_route_propagation = bool
     routes = list(object({
       name             = string
       addressPrefix    = string
@@ -32,8 +31,7 @@ variable "route_table" {
   })
   description = "The route table with its properties."
   default = {
- //   disable_bgp_route_propagation = false
-    bgp_route_propagation_enabled = true
+    disable_bgp_route_propagation = false
     routes                        = []
   }
 }

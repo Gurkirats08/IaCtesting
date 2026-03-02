@@ -1,0 +1,2 @@
+Cloud security baseline link: https://confluence.tools.telstra.com/display/NCCS/Azure+Key+Vault
+Last modified: Sept 03, 2021

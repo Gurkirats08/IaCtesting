@@ -49,29 +49,14 @@ variable "frontend_port_number" {
   description = "frontend port number"
 }
 
-variable "frontend_ip_configuration_name"{
+variable "frontend_ip_configurtion_name"{
   type = string
   description = "frontend ip configuration name"
-}
-
-variable "public_ip_name" {
-  type        = string
-  description = "The name of the public IP address to use for this Application Gateway. Changing this forces a new resource to be created."
-  default     = null
-  
-}
-
-
-variable "zones" {
-  type        = list(string)
-  description = "The availability zones for the Application Gateway."
-  default     = ["1", "2", "3"]  
 }
 
 variable "frontend_ip_configuration_public_ip_address_id" {
   type = string
   description = "frontend ip configuration public ip address id"
-  default = null
 }
 
 variable "backend_address_pool_name" {
@@ -92,7 +77,6 @@ variable "backend_http_settings_cookie_based_affinity" {
 variable "backend_http_settings_path" {
   type = string
   description = "backend_http_settings_path"
-  default = null
 }
 
 variable "backend_http_settings_port" {
@@ -108,7 +92,6 @@ variable "backend_http_settings_protocol" {
 variable "backend_http_settings_request_timeout" {
   type = number
   description = "backend_http_settings_request_timeout"
-  default = 30
 }
 
 variable "http_listener_name" {

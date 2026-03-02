@@ -1,11 +1,15 @@
-variable "location" {
+variable "main_location" {
   type        = string
   description = "Location for deployment"
 }
-variable "resource_group_name" {
-  type        = string
-  description = "Name of the resource group."
 
+variable "environment" {
+  type        = string
+  description = "Deployment environment."
+}
+
+variable "public_ip_ids" {
+  type = map(any)
 }
 
 # -
@@ -14,19 +18,17 @@ variable "resource_group_name" {
 variable "vnet_gateways" {
   description = "The vnet gateways with their properties."
   type = map(object({
-    VnetGatewayName            = string
+    name                       = string
     resourceGroupName          = string
     type                       = string
     vpnType                    = optional(string)
     enableBGP                  = optional(bool)
-    gatewaySkuName             = string
-    vnetName                   = string
+    gatewaySku                 = string
+    vNetName                   = string
     gatewayTags                = optional(map(string))
+    gatewayIpConfig            = string
     privateIpAddressAllocation = string
     subscriptionId             = string
-    subnetRG                   = string
-    publicipRG                 = string
-    gatewayIPName              = string
   }))
   default = {}
 }

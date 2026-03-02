@@ -10,11 +10,6 @@ variable "sourceVnetName" {
   type = string
 }
 
-variable "remote_virtual_network_id" {
-  type = string
-  default = null
-}
-
 variable "sourceVnetRg" {
   type = string
 }

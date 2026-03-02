@@ -4,15 +4,20 @@ resource "azurerm_data_protection_backup_vault" "this" {
   location            = var.location
 
   # Specify the type of the data store
-  datastore_type = var.datastore_type
+  datastore_type      = var.datastore_type
 
   # Define the redundancy type
-  redundancy  = var.redundancy
-  soft_delete = "Off"
+  redundancy          = var.redundancy
 
-
-
+  # Enable system-assigned managed identity
   identity {
     type = "SystemAssigned"
   }
+}
+
+resource "azurerm_data_protection_backup_policy_blob_storage" "policy" {
+  name                = var.backuppolicy
+  vault_id            = azurerm_data_protection_backup_vault.this.id
+  retention_duration = var.retention_duration
+
 }

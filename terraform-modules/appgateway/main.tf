@@ -1,18 +1,7 @@
-resource "azurerm_public_ip" "appgw" {
-  count               = var.sku_tier == "Standard_v2" ? 1 : 0
-  name                = "ip-${var.name}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  zones               = var.zones
-}
-
 resource "azurerm_application_gateway" "network" {
   name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
-  zones               = var.zones
 
   sku {
     name     = var.sku_name
@@ -31,8 +20,8 @@ resource "azurerm_application_gateway" "network" {
   }
 
   frontend_ip_configuration {
-    name                 = var.frontend_ip_configuration_name
-    public_ip_address_id = var.sku_tier == "Standard_v2" ? azurerm_public_ip.appgw[0].id : null
+    name                 = var.frontend_ip_configurtion_name
+    public_ip_address_id = var.frontend_ip_configuration_public_ip_address_id
   }
 
   backend_address_pool {
@@ -50,7 +39,7 @@ resource "azurerm_application_gateway" "network" {
 
   http_listener {
     name                           = var.http_listener_name
-    frontend_ip_configuration_name = var.frontend_ip_configuration_name
+    frontend_ip_configuration_name = var.frontend_ip_configurtion_name
     frontend_port_name             = var.frontend_port_name
     protocol                       = var.http_listener_protocol
   }

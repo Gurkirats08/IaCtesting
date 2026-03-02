@@ -1,0 +1,3 @@
+Cloud security baseline link: https://confluence.tools.telstra.com/display/NCCS/Azure+SQL+Database
+Last modified: Mar 23, 2022
+

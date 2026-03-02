@@ -16,13 +16,7 @@ variable "bastion_host_additional_tags" {
 
 variable "resourceGroupName" {
   type        = string
-  description = "The name of the resource group in which the Bastion Host will be created."
-}
-
-variable "subnetRG" {
-  type        = string
-  description = "The name of the resource group in which the subnet is created."
-
+  description = "The name of the resource group in which the Bastion Host will be created." 
 }
 
 # -
@@ -35,9 +29,12 @@ variable "bastion_hosts" {
     subscriptionId     = string
     VirtualNetworkName = string
     bastionIPName      = string
-    bastion_sku        = optional(string)
   }))
   description = "The Bostion Host with their properties."
   default     = {}
 }
 
+# variable "bastion_hosts" {
+#   description = "The name of the Bastion host."
+#   type        = string
+# }

@@ -30,11 +30,4 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
       enabled  = true
     }
   }
-  lifecycle {
-    ignore_changes = [ 
-      metric,
-      enabled_log
-    ]
-  }
-  
 }

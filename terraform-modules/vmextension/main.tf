@@ -20,7 +20,4 @@ resource "azurerm_virtual_machine_extension" "this" {
   automatic_upgrade_enabled  = var.automatic_upgrade_enabled
   settings                   = var.settings
   protected_settings         = var.protected_settings
-  lifecycle {
-    ignore_changes = [ virtual_machine_id ] 
-  }
 }

@@ -32,11 +32,4 @@ variable "tenant_id" {
   description = "The object ID."
   type        = list(string)
  }
-
- variable "auto_key_rotation_enabled" {
-  description = "Enable auto key rotation."
-  type        = bool
-  default     = false
-   
- }
  
