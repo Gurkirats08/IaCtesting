@@ -16,8 +16,20 @@ resource "azurerm_data_protection_backup_vault" "this" {
 }
 
 resource "azurerm_data_protection_backup_policy_blob_storage" "policy" {
-  name                = var.backuppolicy
-  vault_id            = azurerm_data_protection_backup_vault.this.id
-  retention_duration = var.retention_duration
+  name       = var.backuppolicy
+  vault_id   = azurerm_data_protection_backup_vault.this.id
 
+  retention_rule {
+    name     = "Default"
+    priority = 1
+    
+    life_cycle {
+      duration        = var.retention_duration
+      data_store_type = "OperationalStore"
+    }
+    
+    criteria {
+      absolute_criteria = "AllBackup"
+    }
+  }
 }

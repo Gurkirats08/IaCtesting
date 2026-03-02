@@ -31,16 +31,3 @@ module "resource_group" {
   name     = module.naming.resource_group.name_unique
 }
 
-# Module for the recovery-services-vault tesing 
-module "test" {
-  source                            = "../"
-  location                          = "East US"
-  resource_group_name               = module.resource_group.name
-  recovery_services_vault_name      = module.naming.recovery_services_vault.name_unique
-  identity_type                     = "UserAssigned"
-  infrastructure_encryption_enabled = true
-  encryption_key_id                 = "https://keyiac001.vault.azure.net/keys/iac/188b0491fc9844bc8111f4667ea5b67f"
-  identity_ids                      = ["/subscriptions/3ad40d2e-2752-487a-90e2-aa188707bdd3/resourceGroups/resourcetestdemo/providers/Microsoft.ManagedIdentity/userAssignedIdentities/manage_id_iac"]
-  user_assigned_identity_id         = "/subscriptions/3ad40d2e-2752-487a-90e2-aa188707bdd3/resourceGroups/resourcetestdemo/providers/Microsoft.ManagedIdentity/userAssignedIdentities/manage_id_iac"
-  use_system_assigned_identity      = false
-}
