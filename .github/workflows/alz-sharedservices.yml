@@ -47,15 +47,28 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Fetch Secrets from Key Vault
+        id: keyvault
+        run: |
+          CLIENT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-CLIENT-ID --query value -o tsv)
+          TENANT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-TENANT-ID --query value -o tsv)
+          SUBSCRIPTION_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-SUBSCRIPTION-ID --query value -o tsv)
+          echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "TENANT_ID=$TENANT_ID" >> $GITHUB_OUTPUT
+          echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> $GITHUB_OUTPUT
+          echo "::add-mask::$CLIENT_ID"
+          echo "::add-mask::$TENANT_ID"
+          echo "::add-mask::$SUBSCRIPTION_ID"
+
       - name: Terraform Init
         working-directory: ./platform-sharedservices-alz-deployment/sharedservices
         env:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: terraform init -backend-config="backend.tfvars"
 
@@ -75,9 +88,9 @@ jobs:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
           if [ -f "${{ github.event.inputs.environment }}-sharedservices.tfvars" ]; then
@@ -148,6 +161,19 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Fetch Secrets from Key Vault
+        id: keyvault
+        run: |
+          CLIENT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-CLIENT-ID --query value -o tsv)
+          TENANT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-TENANT-ID --query value -o tsv)
+          SUBSCRIPTION_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-SUBSCRIPTION-ID --query value -o tsv)
+          echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "TENANT_ID=$TENANT_ID" >> $GITHUB_OUTPUT
+          echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> $GITHUB_OUTPUT
+          echo "::add-mask::$CLIENT_ID"
+          echo "::add-mask::$TENANT_ID"
+          echo "::add-mask::$SUBSCRIPTION_ID"
+
       - name: Download Plan Artifact
         uses: actions/download-artifact@v4
         with:
@@ -160,9 +186,9 @@ jobs:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: terraform init -backend-config="backend.tfvars"
 
@@ -173,9 +199,9 @@ jobs:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
           if [ -f "tfplan-sharedservices" ]; then
@@ -208,15 +234,28 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Fetch Secrets from Key Vault
+        id: keyvault
+        run: |
+          CLIENT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-CLIENT-ID --query value -o tsv)
+          TENANT_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-TENANT-ID --query value -o tsv)
+          SUBSCRIPTION_ID=$(az keyvault secret show --vault-name ${{ secrets.KEY_VAULT_NAME }} --name ARM-SUBSCRIPTION-ID --query value -o tsv)
+          echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_OUTPUT
+          echo "TENANT_ID=$TENANT_ID" >> $GITHUB_OUTPUT
+          echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> $GITHUB_OUTPUT
+          echo "::add-mask::$CLIENT_ID"
+          echo "::add-mask::$TENANT_ID"
+          echo "::add-mask::$SUBSCRIPTION_ID"
+
       - name: Terraform Init
         working-directory: ./platform-sharedservices-alz-deployment/sharedservices
         env:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: terraform init -backend-config="backend.tfvars"
 
@@ -227,9 +266,9 @@ jobs:
           ARM_USE_OIDC: true
           ARM_OIDC_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
           ARM_OIDC_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ steps.keyvault.outputs.CLIENT_ID }}
+          ARM_TENANT_ID: ${{ steps.keyvault.outputs.TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ steps.keyvault.outputs.SUBSCRIPTION_ID }}
           TF_VAR_environment: ${{ github.event.inputs.environment }}
         run: |
           if [ -f "${{ github.event.inputs.environment }}-sharedservices.tfvars" ]; then
