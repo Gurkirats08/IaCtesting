@@ -23,3 +23,25 @@ output "firewall_ips_map" {
     for x in azurerm_firewall.this : x.name => x.ip_configuration.0.private_ip_address
   }
 }
+
+# Firewall Rule Collection Outputs
+output "network_rule_collection_ids" {
+  value = {
+    for k, v in azurerm_firewall_network_rule_collection.this : k => v.id
+  }
+  description = "IDs of the firewall network rule collections"
+}
+
+output "nat_rule_collection_ids" {
+  value = {
+    for k, v in azurerm_firewall_nat_rule_collection.this : k => v.id
+  }
+  description = "IDs of the firewall NAT rule collections"
+}
+
+output "application_rule_collection_ids" {
+  value = {
+    for k, v in azurerm_firewall_application_rule_collection.this : k => v.id
+  }
+  description = "IDs of the firewall application rule collections"
+}

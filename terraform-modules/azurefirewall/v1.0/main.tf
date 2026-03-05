@@ -22,3 +22,78 @@ resource "azurerm_firewall" "this" {
     public_ip_address_id = var.firewall_ip_ids[each.value.firewallName].id
   }
 }
+
+# Firewall Network Rules
+resource "azurerm_firewall_network_rule_collection" "this" {
+  for_each            = var.fw_network_rules
+  name                = each.value.name
+  azure_firewall_name = azurerm_firewall.this[each.value.firewall_key].name
+  resource_group_name = var.resource_group_name
+  priority            = each.value.priority
+  action              = each.value.action
+
+  dynamic "rule" {
+    for_each = each.value.rules
+    content {
+      name                  = rule.value.name
+      description           = rule.value.description
+      source_addresses      = rule.value.source_addresses
+      destination_ports     = rule.value.destination_ports
+      destination_addresses = rule.value.destination_addresses
+      protocols             = rule.value.protocols
+    }
+  }
+}
+
+# Firewall NAT Rules
+resource "azurerm_firewall_nat_rule_collection" "this" {
+  for_each            = var.fw_nat_rules
+  name                = each.value.name
+  azure_firewall_name = azurerm_firewall.this[each.value.firewall_key].name
+  resource_group_name = var.resource_group_name
+  priority            = each.value.priority
+  action              = "Dnat"
+
+  dynamic "rule" {
+    for_each = each.value.rules
+    content {
+      name                  = rule.value.name
+      description           = rule.value.description
+      source_addresses      = rule.value.source_addresses
+      destination_addresses = rule.value.destination_addresses
+      destination_ports     = rule.value.destination_ports
+      protocols             = rule.value.protocols
+      translated_address    = rule.value.translated_address
+      translated_port       = rule.value.translated_port
+    }
+  }
+}
+
+# Firewall Application Rules
+resource "azurerm_firewall_application_rule_collection" "this" {
+  for_each            = var.fw_application_rules
+  name                = each.value.name
+  azure_firewall_name = azurerm_firewall.this[each.value.firewall_key].name
+  resource_group_name = var.resource_group_name
+  priority            = each.value.priority
+  action              = each.value.action
+
+  dynamic "rule" {
+    for_each = each.value.rules
+    content {
+      name             = rule.value.name
+      description      = rule.value.description
+      source_addresses = rule.value.source_addresses
+      fqdn_tags        = rule.value.fqdn_tags
+      target_fqdns     = rule.value.target_fqdns
+
+      dynamic "protocol" {
+        for_each = rule.value.protocol
+        content {
+          port = protocol.value.port
+          type = protocol.value.type
+        }
+      }
+    }
+  }
+}
